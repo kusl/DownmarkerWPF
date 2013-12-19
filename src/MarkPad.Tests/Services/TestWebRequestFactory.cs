@@ -12,7 +12,7 @@ namespace MarkPad.Tests.Services
 {
     public class TestWebRequestFactory : IWebRequestFactory
     {
-        private readonly Dictionary<string, string> lookup = new Dictionary<string, string>();
+        readonly Dictionary<string, string> lookup = new Dictionary<string, string>();
 
         public void RegisterResultForUri(string uri, string resultBody)
         {
@@ -30,13 +30,13 @@ namespace MarkPad.Tests.Services
             return null;
         }
 
-        private static WebRequest CreateWebRequest(string toReturn)
+        static WebRequest CreateWebRequest(string toReturn)
         {
             var request = Substitute.For<WebRequest>();
 
             request
                 .BeginGetResponse(Arg.Any<AsyncCallback>(), Arg.Any<object>())
-                .Returns(c=>
+                .Returns(c =>
                 {
                     var fromResult = TaskEx.FromResult(toReturn);
                     c.Arg<AsyncCallback>()(fromResult);
@@ -45,7 +45,7 @@ namespace MarkPad.Tests.Services
 
             request
                 .EndGetResponse(Arg.Any<IAsyncResult>())
-                .Returns(c=>
+                .Returns(c =>
                 {
                     var response = Substitute.For<WebResponse>();
                     var byteArray = Encoding.ASCII.GetBytes(toReturn);

@@ -12,11 +12,11 @@ namespace MarkPad.DocumentSources.MetaWeblog
 
         public WebDocumentItem(
             IWebDocumentService webDocumentService,
-            IEventAggregator eventAggregator, 
-            string id, 
-            string title, 
+            IEventAggregator eventAggregator,
+            string id,
+            string title,
             BlogSetting blog) :
-            base(eventAggregator)
+                base(eventAggregator)
         {
             this.webDocumentService = webDocumentService;
             this.id = id;

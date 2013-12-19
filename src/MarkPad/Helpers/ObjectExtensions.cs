@@ -37,7 +37,8 @@ namespace MarkPad.Framework
         /// <param name="func"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static TResult Evaluate<T, TResult>(this T obj, Func<T, TResult> func, TResult defaultValue) where T : class
+        public static TResult Evaluate<T, TResult>(this T obj, Func<T, TResult> func, TResult defaultValue)
+            where T : class
         {
             return obj != null ? func(obj) : defaultValue;
         }

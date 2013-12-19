@@ -13,28 +13,28 @@ namespace MarkPad.Document
     {
         static readonly Markdown Markdown = new Markdown();
 
-        static DocumentParser() 
+        static DocumentParser()
         {
             Markdown.NewWindowForExternalLinks = true;
         }
 
-        private readonly ISettingsProvider settingsProvider;
+        readonly ISettingsProvider settingsProvider;
 
         public DocumentParser(ISettingsProvider settingsProvider)
         {
             this.settingsProvider = settingsProvider;
         }
 
-		public string Parse(string source)
-		{
-		    var settings = settingsProvider.GetSettings<MarkPadSettings>();
-		    Markdown.ExtraMode = settings.MarkdownExtraEnabled;
+        public string Parse(string source)
+        {
+            var settings = settingsProvider.GetSettings<MarkPadSettings>();
+            Markdown.ExtraMode = settings.MarkdownExtraEnabled;
 
-			string header;
-			string contents;
-			SplitHeaderAndContents(source, out header, out contents);
+            string header;
+            string contents;
+            SplitHeaderAndContents(source, out header, out contents);
 
-			const string linkScript = @"
+            const string linkScript = @"
 <script type='text/javascript'>
 	window.onload = function(){
 		var links = document.getElementsByTagName('a');
@@ -46,19 +46,19 @@ namespace MarkPad.Document
 </script>
 			";
 
-			return ToHtml(header, contents, linkScript);
-		}
+            return ToHtml(header, contents, linkScript);
+        }
 
-		public string ParseClean(string source)
-		{
-			string header;
-			string contents;
-			SplitHeaderAndContents(source, out header, out contents);
+        public string ParseClean(string source)
+        {
+            string header;
+            string contents;
+            SplitHeaderAndContents(source, out header, out contents);
 
-			return ToHtml(header, contents, "");
-		}
-		
-		public static string GetBodyContents(string source)
+            return ToHtml(header, contents, "");
+        }
+
+        public static string GetBodyContents(string source)
         {
             string header;
             string contents;
@@ -67,7 +67,7 @@ namespace MarkPad.Document
             return MarkdownConvert(contents);
         }
 
-        private static string MarkdownConvert(string contents)
+        static string MarkdownConvert(string contents)
         {
             lock (Markdown)
             {
@@ -75,21 +75,21 @@ namespace MarkPad.Document
             }
         }
 
-        private static string ToHtml(string header, string contents, string extraScripts)
+        static string ToHtml(string header, string contents, string extraScripts)
         {
-		    var body = MarkdownConvert(contents);
+            var body = MarkdownConvert(contents);
 
-			var stylesheets = GetResources(
-				header,
-				"*.css",
-				"<link rel=\"stylesheet\" type=\"text/css\" href=\"theme://css/{0}/{1}\" />\r\n");
+            var stylesheets = GetResources(
+                header,
+                "*.css",
+                "<link rel=\"stylesheet\" type=\"text/css\" href=\"theme://css/{0}/{1}\" />\r\n");
 
-			var scripts = GetResources(
-				header,
-				"*.js",
+            var scripts = GetResources(
+                header,
+                "*.js",
                 "<script type=\"text/javascript\" src=\"theme://script/{0}/{1}\"></script>\r\n");
 
-			var document = String.Format(
+            var document = String.Format(
                 @"<html>
 <head>
 <style>
@@ -106,46 +106,47 @@ body {{ font-family: Segoe UI, sans-serif; font-size:0.8em; }}
 {2}{3}
 </body>
 </html>",
-				stylesheets,
-				body,
-				scripts,
-				extraScripts);
+                stylesheets,
+                body,
+                scripts,
+                extraScripts);
 
-			return document;
-		}
+            return document;
+        }
 
-		private static string GetResources(string header, string filter, string resourceTemplate)
-		{
-			string themeName;
-			if (!TryGetHeaderValue(header, "theme", out themeName)) return "";
+        static string GetResources(string header, string filter, string resourceTemplate)
+        {
+            string themeName;
+            if (!TryGetHeaderValue(header, "theme", out themeName)) return "";
 
-			var resources = "";
-			var path = Path.Combine(HtmlPreview.BaseDirectory, themeName);
+            var resources = "";
+            var path = Path.Combine(HtmlPreview.BaseDirectory, themeName);
 
-			foreach (var resource in Directory.GetFiles(path, filter))
-			{
-				resources += String.Format(
-					resourceTemplate,
-					themeName,
-					Path.GetFileName(resource));
-			}
+            foreach (var resource in Directory.GetFiles(path, filter))
+            {
+                resources += String.Format(
+                    resourceTemplate,
+                    themeName,
+                    Path.GetFileName(resource));
+            }
 
-			return resources;
-		}
+            return resources;
+        }
 
-		private static bool TryGetHeaderValue(string header, string key, out string value)
+        static bool TryGetHeaderValue(string header, string key, out string value)
         {
             // TODO: Cache these?
-            var match = Regex.Match(header, "^" + key + "\\s*:\\s*(.*)$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+            var match = Regex.Match(header, "^" + key + "\\s*:\\s*(.*)$",
+                RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
             value = match.Success ? match.Result("$1").Trim() : String.Empty;
 
             return match.Success;
         }
 
-        private static void SplitHeaderAndContents(string source, out string header, out string contents)
+        static void SplitHeaderAndContents(string source, out string header, out string contents)
         {
-            var match = Regex.Match(source, @"^--- *\r?\n+(.*?)\r?\n+--- *\r?\n+(.*)$", 
+            var match = Regex.Match(source, @"^--- *\r?\n+(.*?)\r?\n+--- *\r?\n+(.*)$",
                 RegexOptions.Singleline | RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -156,5 +157,5 @@ body {{ font-family: Segoe UI, sans-serif; font-size:0.8em; }}
             header = "";
             contents = source;
         }
-	}
+    }
 }

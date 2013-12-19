@@ -16,7 +16,7 @@ namespace MarkPad.Tests.OpenFromWeb
     public class OpenFromWebViewModelTests
     {
         readonly OpenFromWebViewModel subject;
-        
+
         readonly IMetaWeblogService metaWeblogService = Substitute.For<IMetaWeblogService>();
         readonly IDialogService dialogService = Substitute.For<IDialogService>();
         readonly ITaskSchedulerFactory taskScheduler = Substitute.For<ITaskSchedulerFactory>();
@@ -63,7 +63,7 @@ namespace MarkPad.Tests.OpenFromWeb
         [Fact]
         public void CanFetch_WithOneOrMoreBlogs_ReturnsTrue()
         {
-            subject.InitializeBlogs(new List<BlogSetting> { new BlogSetting() });
+            subject.InitializeBlogs(new List<BlogSetting> {new BlogSetting()});
 
             Assert.True(subject.CanFetch);
         }
@@ -71,7 +71,7 @@ namespace MarkPad.Tests.OpenFromWeb
         [Fact]
         public void CanContinue_AfterFetchingNoPosts_ReturnsFalse()
         {
-            subject.InitializeBlogs(new List<BlogSetting> { new BlogSetting() });
+            subject.InitializeBlogs(new List<BlogSetting> {new BlogSetting()});
 
             metaWeblogService
                 .GetRecentPostsAsync(Arg.Any<BlogSetting>(), Arg.Any<int>())
@@ -91,7 +91,7 @@ namespace MarkPad.Tests.OpenFromWeb
 
             metaWeblogService
                 .GetRecentPostsAsync(Arg.Any<BlogSetting>(), Arg.Any<int>())
-                .Returns(Task<Post[]>.Factory.StartNew(() => { throw new Exception(); } ));
+                .Returns(Task<Post[]>.Factory.StartNew(() => { throw new Exception(); }));
 
             subject.Fetch()
                 .Wait();
@@ -102,9 +102,9 @@ namespace MarkPad.Tests.OpenFromWeb
         [Fact]
         public void CurrentPost_AfterFetchingOnePost_SelectsFirstPost()
         {
-            subject.InitializeBlogs(new List<BlogSetting> { new BlogSetting() });
+            subject.InitializeBlogs(new List<BlogSetting> {new BlogSetting()});
 
-            var posts = new[] {new Post { title = "ABC"}};
+            var posts = new[] {new Post {title = "ABC"}};
 
             metaWeblogService
                 .GetRecentPostsAsync(Arg.Any<BlogSetting>(), Arg.Any<int>())
@@ -120,9 +120,9 @@ namespace MarkPad.Tests.OpenFromWeb
         [Fact]
         public void CanContinue_AfterFetchingOnePost_ReturnsTrue()
         {
-            subject.InitializeBlogs(new List<BlogSetting> { new BlogSetting() });
+            subject.InitializeBlogs(new List<BlogSetting> {new BlogSetting()});
 
-            var posts = new[] { new Post { title = "ABC" } };
+            var posts = new[] {new Post {title = "ABC"}};
 
             metaWeblogService
                 .GetRecentPostsAsync(Arg.Any<BlogSetting>(), Arg.Any<int>())
@@ -141,9 +141,9 @@ namespace MarkPad.Tests.OpenFromWeb
             var conductor = Substitute.For<IConductor>();
             subject.Parent = conductor;
 
-            subject.InitializeBlogs(new List<BlogSetting> { new BlogSetting() });
+            subject.InitializeBlogs(new List<BlogSetting> {new BlogSetting()});
 
-            var posts = new[] { new Post { title = "ABC" } };
+            var posts = new[] {new Post {title = "ABC"}};
 
             metaWeblogService
                 .GetRecentPostsAsync(Arg.Any<BlogSetting>(), Arg.Any<int>())

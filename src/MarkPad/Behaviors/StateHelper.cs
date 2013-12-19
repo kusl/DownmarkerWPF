@@ -8,7 +8,7 @@ namespace MarkPad.Behaviors
     {
         public static string GetVisualStateName(DependencyObject target)
         {
-            return (string)target.GetValue(VisualStateNameProperty);
+            return (string) target.GetValue(VisualStateNameProperty);
         }
 
         public static void SetVisualStateName(DependencyObject target, string visualStateName)
@@ -17,11 +17,12 @@ namespace MarkPad.Behaviors
         }
 
         public static readonly DependencyProperty VisualStateNameProperty = DependencyProperty.RegisterAttached(
-            "VisualStateName", typeof(string), typeof(VisualStateHelper), new PropertyMetadata(OnVisualStateNameChanged));
+            "VisualStateName", typeof (string), typeof (VisualStateHelper),
+            new PropertyMetadata(OnVisualStateNameChanged));
 
-        private static void OnVisualStateNameChanged(object sender, DependencyPropertyChangedEventArgs args)
+        static void OnVisualStateNameChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
-            var visualStateName = (string)args.NewValue;
+            var visualStateName = (string) args.NewValue;
             var control = sender as Grid;
             if (control == null)
                 throw new InvalidOperationException("This attached property only supports types derived from Control.");

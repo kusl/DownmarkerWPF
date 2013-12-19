@@ -37,8 +37,9 @@ namespace MarkPad.Tests.DocumentSources
             webDocumentService = new Lazy<IWebDocumentService>(() => Substitute.For<IWebDocumentService>());
             fileSystem = TestObjectMother.GetFileSystem();
 
-            documentFactory = new DocumentFactory(dialogService, eventAggregator, siteContextGenerator, blogService, windowManager, webDocumentService,
-                                                  fileSystem);
+            documentFactory = new DocumentFactory(dialogService, eventAggregator, siteContextGenerator, blogService,
+                windowManager, webDocumentService,
+                fileSystem);
         }
 
         [Fact]
@@ -80,13 +81,14 @@ namespace MarkPad.Tests.DocumentSources
         public async Task SaveDocumentAs_CopiesAssociatedFiles()
         {
             // arrange
-            dialogService.GetFileSavePath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(@"c:\AnotherPath\Test.md");
+            dialogService.GetFileSavePath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+                .Returns(@"c:\AnotherPath\Test.md");
             const string content = @"Some text
 
 ![Alt](AssociatedImage.png)";
             var fileReference = new FileReference(@"c:\Path\AssociatedImage.png", "AssociatedImage.png", true);
-            var doc = new TestMarkpadDocumentBase("Title", content, null, new[]{fileReference}, documentFactory,
-                                                  Substitute.For<ISiteContext>(), fileSystem);
+            var doc = new TestMarkpadDocumentBase("Title", content, null, new[] {fileReference}, documentFactory,
+                Substitute.For<ISiteContext>(), fileSystem);
 
             // act
             var document = await documentFactory.SaveDocumentAs(doc);
@@ -102,13 +104,15 @@ namespace MarkPad.Tests.DocumentSources
         public async Task SaveDocumentAs_CopiesAssociatedFilesInRelativeDir()
         {
             // arrange
-            dialogService.GetFileSavePath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(@"c:\AnotherPath\Test.md");
+            dialogService.GetFileSavePath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+                .Returns(@"c:\AnotherPath\Test.md");
             const string content = @"Some text
 
 ![Alt](RelativeDir\AssociatedImage.png)";
-            var fileReference = new FileReference(@"c:\Path\RelativeDir\AssociatedImage.png", @"RelativeDir\AssociatedImage.png", true);
-            var doc = new TestMarkpadDocumentBase("Title", content, null, new[] { fileReference }, documentFactory,
-                                                  Substitute.For<ISiteContext>(), fileSystem);
+            var fileReference = new FileReference(@"c:\Path\RelativeDir\AssociatedImage.png",
+                @"RelativeDir\AssociatedImage.png", true);
+            var doc = new TestMarkpadDocumentBase("Title", content, null, new[] {fileReference}, documentFactory,
+                Substitute.For<ISiteContext>(), fileSystem);
 
             // act
             var document = await documentFactory.SaveDocumentAs(doc);
@@ -117,20 +121,24 @@ namespace MarkPad.Tests.DocumentSources
             Assert.Equal(1, document.AssociatedFiles.Count());
             Assert.Equal(@"c:\AnotherPath\RelativeDir\AssociatedImage.png", document.AssociatedFiles.Single().FullPath);
             Assert.Equal(@"RelativeDir\AssociatedImage.png", document.AssociatedFiles.Single().RelativePath);
-            fileSystem.File.Received().Copy(@"c:\Path\RelativeDir\AssociatedImage.png", @"c:\AnotherPath\RelativeDir\AssociatedImage.png");
+            fileSystem.File.Received()
+                .Copy(@"c:\Path\RelativeDir\AssociatedImage.png", @"c:\AnotherPath\RelativeDir\AssociatedImage.png");
         }
 
         [Fact]
         public async Task SaveDocumentAs_RewritesAssociatedPathConformingToImagesDirectoryConvention()
         {
             // arrange
-            dialogService.GetFileSavePath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(@"c:\AnotherPath\Test.md");
+            dialogService.GetFileSavePath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+                .Returns(@"c:\AnotherPath\Test.md");
             const string content = @"Some text
 
 ![Alt](Original Title_images\AssociatedImage.png)";
-            var fileReference = new FileReference(@"c:\Path\Original Title_images\AssociatedImage.png", @"Original Title_images\AssociatedImage.png", true);
-            var doc = new TestMarkpadDocumentBase("Original Title", content, null, new[] { fileReference }, documentFactory,
-                                                  Substitute.For<ISiteContext>(), fileSystem);
+            var fileReference = new FileReference(@"c:\Path\Original Title_images\AssociatedImage.png",
+                @"Original Title_images\AssociatedImage.png", true);
+            var doc = new TestMarkpadDocumentBase("Original Title", content, null, new[] {fileReference},
+                documentFactory,
+                Substitute.For<ISiteContext>(), fileSystem);
 
             // act
             var document = await documentFactory.SaveDocumentAs(doc);
@@ -139,7 +147,9 @@ namespace MarkPad.Tests.DocumentSources
             Assert.Equal(1, document.AssociatedFiles.Count());
             Assert.Equal(@"c:\AnotherPath\Test_images\AssociatedImage.png", document.AssociatedFiles.Single().FullPath);
             Assert.Equal(@"Test_images\AssociatedImage.png", document.AssociatedFiles.Single().RelativePath);
-            fileSystem.File.Received().Copy(@"c:\Path\Original Title_images\AssociatedImage.png", @"c:\AnotherPath\Test_images\AssociatedImage.png");
+            fileSystem.File.Received()
+                .Copy(@"c:\Path\Original Title_images\AssociatedImage.png",
+                    @"c:\AnotherPath\Test_images\AssociatedImage.png");
         }
     }
 }

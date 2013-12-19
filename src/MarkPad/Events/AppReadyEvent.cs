@@ -5,6 +5,5 @@ namespace MarkPad.Events
     /// </summary>
     public class AppReadyEvent
     {
-        
     }
 }

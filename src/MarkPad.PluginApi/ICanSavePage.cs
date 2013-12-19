@@ -2,10 +2,10 @@
 
 namespace MarkPad.Plugins
 {
-	[InheritedExport]
-	public interface ICanSavePage : IPlugin
-	{
-		string SavePageLabel { get; }
-		void SavePage(IMarkpadDocument documentViewModel);
-	}
+    [InheritedExport]
+    public interface ICanSavePage : IPlugin
+    {
+        string SavePageLabel { get; }
+        void SavePage(IMarkpadDocument documentViewModel);
+    }
 }

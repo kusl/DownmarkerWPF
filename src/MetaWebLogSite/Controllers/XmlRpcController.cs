@@ -5,14 +5,15 @@ using System.Xml;
 
 namespace MetaWebLogSite.Controllers
 {
-	public class XmlRpcController : Controller
-	{
-		public ActionResult Rsd()
-		{
+    public class XmlRpcController : Controller
+    {
+        public ActionResult Rsd()
+        {
             var ms = new MemoryStream();
             var xmlWriter = XmlWriter.Create(ms);
 
-            var root = (HttpContext.Request.IsSecureConnection ? "https://" : "http://") + HttpContext.Request.Url.Authority;
+            var root = (HttpContext.Request.IsSecureConnection ? "https://" : "http://") +
+                       HttpContext.Request.Url.Authority;
             var api = root + VirtualPathUtility.ToAbsolute("~/blogapi");
 
             xmlWriter.WriteStartDocument();
@@ -42,7 +43,6 @@ namespace MetaWebLogSite.Controllers
                             xmlWriter.WriteEndElement();
                         }
                         xmlWriter.WriteEndElement();
-
                     }
                     xmlWriter.WriteEndElement();
                 }
@@ -54,6 +54,6 @@ namespace MetaWebLogSite.Controllers
             ms.Position = 0;
 
             return new FileStreamResult(ms, "text/xml");
-		}
-	}
+        }
+    }
 }

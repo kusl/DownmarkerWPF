@@ -18,6 +18,7 @@ namespace MarkPad.Settings
         /// <param name="freshCopy">If true, does not fetch from cache (useful for isolated editing)</param>
         /// <returns></returns>
         T GetSettings<T>(bool freshCopy = false) where T : new();
+
         void SaveSettings<T>(T settings);
         IEnumerable<SettingsProvider.SettingDescriptor> ReadSettingMetadata<T>();
         IEnumerable<SettingsProvider.SettingDescriptor> ReadSettingMetadata(Type settingsType);
@@ -34,7 +35,9 @@ namespace MarkPad.Settings
 
     public class SettingsProvider : ISettingsProvider
     {
-        const string NotConvertableMessage = "Settings provider only supports types that Convert.ChangeType supports. See http://msdn.microsoft.com/en-us/library/dtb69x08.aspx";
+        const string NotConvertableMessage =
+            "Settings provider only supports types that Convert.ChangeType supports. See http://msdn.microsoft.com/en-us/library/dtb69x08.aspx";
+
         readonly ISettingsStorage settingsRepository;
         readonly Dictionary<Type, object> cache = new Dictionary<Type, object>();
 
@@ -47,7 +50,7 @@ namespace MarkPad.Settings
         {
             var type = typeof (T);
             if (!fresh && cache.ContainsKey(type))
-                return (T)cache[type];
+                return (T) cache[type];
 
             var settingsLookup = settingsRepository.Load(GetKey<T>());
             var settings = new T();
@@ -57,13 +60,13 @@ namespace MarkPad.Settings
             {
                 // Write over it using the stored value if exists
                 var key = GetKey<T>(setting);
-                var value = settingsLookup.ContainsKey(key) 
-                    ? ConvertValue(settingsLookup[key], setting) 
+                var value = settingsLookup.ContainsKey(key)
+                    ? ConvertValue(settingsLookup[key], setting)
                     : GetDefaultValue(setting);
                 setting.Write(settings, value);
             }
 
-            cache[typeof(T)] = settings;
+            cache[typeof (T)] = settings;
 
             return settings;
         }
@@ -75,7 +78,7 @@ namespace MarkPad.Settings
 
         static string GetKey<T>()
         {
-            return typeof(T).Name;
+            return typeof (T).Name;
         }
 
         object ConvertValue(string storedValue, SettingDescriptor setting)
@@ -85,12 +88,12 @@ namespace MarkPad.Settings
 
         object ConvertValue(string storedValue, Type underlyingType)
         {
-            if (underlyingType == typeof(string)) return storedValue;
+            if (underlyingType == typeof (string)) return storedValue;
             var isList = IsList(underlyingType);
             if (isList && string.IsNullOrEmpty(storedValue)) return CreateListInstance(underlyingType);
-            if (underlyingType != typeof(string) && string.IsNullOrEmpty(storedValue)) return null;
+            if (underlyingType != typeof (string) && string.IsNullOrEmpty(storedValue)) return null;
             if (underlyingType.IsEnum) return Enum.Parse(underlyingType, storedValue, false);
-            if (underlyingType == typeof(Guid)) return Guid.Parse(storedValue);
+            if (underlyingType == typeof (Guid)) return Guid.Parse(storedValue);
             if (isList) return ReadList(storedValue, underlyingType);
 
             object converted;
@@ -110,11 +113,11 @@ namespace MarkPad.Settings
             return converted;
         }
 
-        private object ReadList(string storedValue, Type propertyType)
+        object ReadList(string storedValue, Type propertyType)
         {
             var listItemType = propertyType.GetGenericArguments()[0];
             var list = CreateListInstance(propertyType);
-            var listInterface = (IList)list;
+            var listInterface = (IList) list;
 
             var valueList = settingsRepository.DeserializeList(storedValue);
 
@@ -126,16 +129,19 @@ namespace MarkPad.Settings
             return list;
         }
 
-        private static object CreateListInstance(Type propertyType)
-        {
-            return Activator.CreateInstance(propertyType.IsClass ? propertyType : typeof(List<>).MakeGenericType(propertyType.GetGenericArguments()[0]));
-        }
-
-        private static bool IsList(Type propertyType)
+        static object CreateListInstance(Type propertyType)
         {
             return
-                typeof(IList).IsAssignableFrom(propertyType) ||
-                (propertyType.IsGenericType && typeof(IList<>) == propertyType.GetGenericTypeDefinition());
+                Activator.CreateInstance(propertyType.IsClass
+                    ? propertyType
+                    : typeof (List<>).MakeGenericType(propertyType.GetGenericArguments()[0]));
+        }
+
+        static bool IsList(Type propertyType)
+        {
+            return
+                typeof (IList).IsAssignableFrom(propertyType) ||
+                (propertyType.IsGenericType && typeof (IList<>) == propertyType.GetGenericTypeDefinition());
         }
 
         public void SaveSettings<T>(T settingsToSave)
@@ -158,10 +164,10 @@ namespace MarkPad.Settings
             settingsRepository.Save(GetKey<T>(), settings);
         }
 
-        private string WriteList(object value)
+        string WriteList(object value)
         {
             var list = (
-                from object item in (IList)value
+                from object item in (IList) value
                 select Convert.ToString(item ?? string.Empty, CultureInfo.CurrentCulture))
                 .ToList();
 
@@ -170,14 +176,14 @@ namespace MarkPad.Settings
 
         internal static string GetKey<T>(SettingDescriptor setting)
         {
-            var settingsType = typeof(T);
+            var settingsType = typeof (T);
 
             return string.Format("{0}.{1}", settingsType.FullName, setting.Property.Name);
         }
 
         public IEnumerable<SettingDescriptor> ReadSettingMetadata<T>()
         {
-            return ReadSettingMetadata(typeof(T));
+            return ReadSettingMetadata(typeof (T));
         }
 
         public IEnumerable<SettingDescriptor> ReadSettingMetadata(Type settingsType)
@@ -203,7 +209,7 @@ namespace MarkPad.Settings
                     setting.Write(cachedCopy, GetDefaultValue(setting));
                 }
 
-                return (T)cachedCopy;
+                return (T) cachedCopy;
             }
 
             return GetSettings<T>();
@@ -225,7 +231,7 @@ namespace MarkPad.Settings
 
             void ReadAttribute<TAttribute>(Action<TAttribute> callback)
             {
-                var instances = property.GetCustomAttributes(typeof(TAttribute), true).OfType<TAttribute>();
+                var instances = property.GetCustomAttributes(typeof (TAttribute), true).OfType<TAttribute>();
                 foreach (var instance in instances)
                 {
                     callback(instance);
@@ -255,7 +261,8 @@ namespace MarkPad.Settings
             {
                 get
                 {
-                    if (Property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    if (Property.PropertyType.IsGenericType &&
+                        property.PropertyType.GetGenericTypeDefinition() == typeof (Nullable<>))
                         return property.PropertyType.GetGenericArguments()[0];
                     return property.PropertyType;
                 }
@@ -276,7 +283,7 @@ namespace MarkPad.Settings
     {
         public static IEnumerable<T> GetValues<T>()
         {
-            return GetValues(typeof(T))
+            return GetValues(typeof (T))
                 .OfType<T>();
         }
 

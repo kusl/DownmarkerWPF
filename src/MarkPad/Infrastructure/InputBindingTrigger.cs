@@ -9,12 +9,13 @@ namespace MarkPad.Infrastructure
     {
         public InputBinding InputBinding
         {
-            get { return (InputBinding)GetValue(InputBindingProperty); }
+            get { return (InputBinding) GetValue(InputBindingProperty); }
             set { SetValue(InputBindingProperty, value); }
         }
 
         public static readonly DependencyProperty InputBindingProperty =
-            DependencyProperty.Register("InputBinding", typeof(InputBinding), typeof(InputBindingTrigger), new UIPropertyMetadata(null));
+            DependencyProperty.Register("InputBinding", typeof (InputBinding), typeof (InputBindingTrigger),
+                new UIPropertyMetadata(null));
 
         protected override void OnAttached()
         {
@@ -39,5 +40,4 @@ namespace MarkPad.Infrastructure
             InvokeActions(parameter);
         }
     }
-
 }

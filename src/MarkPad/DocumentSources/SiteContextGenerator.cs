@@ -26,12 +26,12 @@ namespace MarkPad.DocumentSources
         readonly IGithubApi github;
 
         public SiteContextGenerator(
-            IEventAggregator eventAggregator, 
+            IEventAggregator eventAggregator,
             IDialogService dialogService,
-            IFileSystem fileSystem, 
-            IFileSystemWatcherFactory fileSystemWatcherFactory, 
-            Func<string, IMetaWeblogService> getMetaWeblog, 
-            IWebDocumentService webDocumentService, 
+            IFileSystem fileSystem,
+            IFileSystemWatcherFactory fileSystemWatcherFactory,
+            Func<string, IMetaWeblogService> getMetaWeblog,
+            IWebDocumentService webDocumentService,
             IGithubApi github)
         {
             this.eventAggregator = eventAggregator;
@@ -52,7 +52,7 @@ namespace MarkPad.DocumentSources
             var jekyllSiteBaseDirectory = GetJekyllSiteBaseDirectory(directory);
             if (jekyllSiteBaseDirectory != null)
             {
-                return new JekyllSiteContext(eventAggregator, dialogService, fileSystem, 
+                return new JekyllSiteContext(eventAggregator, dialogService, fileSystem,
                     fileSystemWatcherFactory, jekyllSiteBaseDirectory);
             }
 
@@ -81,7 +81,9 @@ namespace MarkPad.DocumentSources
 
         static bool ContainsJekyllConfigFile(DirectoryInfo directory)
         {
-            return directory.EnumerateFiles().Any(f => string.Equals(f.Name, "_config.yml", StringComparison.InvariantCultureIgnoreCase));
+            return
+                directory.EnumerateFiles()
+                    .Any(f => string.Equals(f.Name, "_config.yml", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

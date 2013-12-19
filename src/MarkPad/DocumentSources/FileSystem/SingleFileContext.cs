@@ -14,8 +14,15 @@ namespace MarkPad.DocumentSources.FileSystem
             WorkingDirectory = Path.GetDirectoryName(fileName);
         }
 
-        public ObservableCollection<ISiteItem> Items { get { return items; } }
-        public bool IsLoading { get { return false; } }
+        public ObservableCollection<ISiteItem> Items
+        {
+            get { return items; }
+        }
+
+        public bool IsLoading
+        {
+            get { return false; }
+        }
 
         public void OpenItem(ISiteItem selectedItem)
         {

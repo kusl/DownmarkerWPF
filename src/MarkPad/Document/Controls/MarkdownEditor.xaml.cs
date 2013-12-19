@@ -44,15 +44,21 @@ namespace MarkPad.Document.Controls
             Editor.MouseMove += (s, e) => e.Handled = true;
             Editor.TextArea.TextEntering += TextAreaTextEntering;
 
-            CommandBindings.Add(new CommandBinding(FormattingCommands.ToggleBold, (x, y) => ToggleBold(), CanEditDocument));
-            CommandBindings.Add(new CommandBinding(FormattingCommands.ToggleItalic, (x, y) => ToggleItalic(), CanEditDocument));
-            CommandBindings.Add(new CommandBinding(FormattingCommands.ToggleCode, (x, y) => ToggleCode(), CanEditDocument));
-            CommandBindings.Add(new CommandBinding(FormattingCommands.ToggleCodeBlock, (x, y) => ToggleCodeBlock(), CanEditDocument));
-            CommandBindings.Add(new CommandBinding(FormattingCommands.SetHyperlink, (x, y) => SetHyperlink(), CanEditDocument));
+            CommandBindings.Add(new CommandBinding(FormattingCommands.ToggleBold, (x, y) => ToggleBold(),
+                CanEditDocument));
+            CommandBindings.Add(new CommandBinding(FormattingCommands.ToggleItalic, (x, y) => ToggleItalic(),
+                CanEditDocument));
+            CommandBindings.Add(new CommandBinding(FormattingCommands.ToggleCode, (x, y) => ToggleCode(),
+                CanEditDocument));
+            CommandBindings.Add(new CommandBinding(FormattingCommands.ToggleCodeBlock, (x, y) => ToggleCodeBlock(),
+                CanEditDocument));
+            CommandBindings.Add(new CommandBinding(FormattingCommands.SetHyperlink, (x, y) => SetHyperlink(),
+                CanEditDocument));
 
             var overtypeMode = new OvertypeMode();
 
-            editorPreviewKeyDownHandlers = new IHandle<EditorPreviewKeyDownEvent>[] {
+            editorPreviewKeyDownHandlers = new IHandle<EditorPreviewKeyDownEvent>[]
+            {
                 new CopyLeadingWhitespaceOnNewLine(),
                 new PasteImageIntoDocument(),
                 new PasteURLIntoDocument(),
@@ -60,48 +66,60 @@ namespace MarkPad.Document.Controls
                 new HardLineBreak(),
                 overtypeMode,
                 new AutoContinueLists(),
-                new IndentLists(()=>IndentType)
+                new IndentLists(() => IndentType)
             };
-            editorTextEnteringHandlers = new IHandle<EditorTextEnteringEvent>[] {
+            editorTextEnteringHandlers = new IHandle<EditorTextEnteringEvent>[]
+            {
                 overtypeMode
             };
         }
 
         #region public IndentType IndentType
+
         public static readonly DependencyProperty IndentTypeProperty =
-            DependencyProperty.Register("IndentType", typeof (IndentType), typeof (MarkdownEditor), new PropertyMetadata(IndentType.Spaces));
+            DependencyProperty.Register("IndentType", typeof (IndentType), typeof (MarkdownEditor),
+                new PropertyMetadata(IndentType.Spaces));
 
         public IndentType IndentType
         {
             get { return (IndentType) GetValue(IndentTypeProperty); }
             set { SetValue(IndentTypeProperty, value); }
         }
+
         #endregion
 
         #region public TextDocument Document
+
         public static readonly DependencyProperty DocumentProperty =
-            DependencyProperty.Register("Document", typeof(TextDocument), typeof(MarkdownEditor), new PropertyMetadata(default(TextDocument)));
+            DependencyProperty.Register("Document", typeof (TextDocument), typeof (MarkdownEditor),
+                new PropertyMetadata(default(TextDocument)));
 
         public TextDocument Document
         {
-            get { return (TextDocument)GetValue(DocumentProperty); }
+            get { return (TextDocument) GetValue(DocumentProperty); }
             set { SetValue(DocumentProperty, value); }
         }
+
         #endregion
 
         #region public bool FloatingToolbarEnabled
+
         public static readonly DependencyProperty FloatingToolbarEnabledProperty =
-            DependencyProperty.Register("FloatingToolbarEnabled", typeof (bool), typeof (MarkdownEditor), new PropertyMetadata(default(bool)));
+            DependencyProperty.Register("FloatingToolbarEnabled", typeof (bool), typeof (MarkdownEditor),
+                new PropertyMetadata(default(bool)));
 
         public bool FloatingToolbarEnabled
         {
-            get { return (bool)GetValue(FloatingToolbarEnabledProperty); }
+            get { return (bool) GetValue(FloatingToolbarEnabledProperty); }
             set { SetValue(FloatingToolbarEnabledProperty, value); }
         }
+
         #endregion
 
         #region public double EditorFontSize
-        public static DependencyProperty EditorFontSizeProperty = DependencyProperty.Register("EditorFontSize", typeof (double), typeof (MarkdownEditor), 
+
+        public static DependencyProperty EditorFontSizeProperty = DependencyProperty.Register("EditorFontSize",
+            typeof (double), typeof (MarkdownEditor),
             new PropertyMetadata(default(double), EditorFontSizeChanged));
 
 
@@ -110,11 +128,13 @@ namespace MarkPad.Document.Controls
             get { return (double) GetValue(EditorFontSizeProperty); }
             set { SetValue(EditorFontSizeProperty, value); }
         }
+
         #endregion
 
-        private static void EditorFontSizeChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        static void EditorFontSizeChanged(DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            ((MarkdownEditor) dependencyObject).Editor.FontSize = (double)dependencyPropertyChangedEventArgs.NewValue;
+            ((MarkdownEditor) dependencyObject).Editor.FontSize = (double) dependencyPropertyChangedEventArgs.NewValue;
         }
 
         void EditorLoaded(object sender, RoutedEventArgs e)
@@ -146,7 +166,7 @@ namespace MarkPad.Document.Controls
                 ShowFloatingToolBar();
         }
 
-        private void HandleMouseUp(object sender, MouseButtonEventArgs e)
+        void HandleMouseUp(object sender, MouseButtonEventArgs e)
         {
             if (!FloatingToolbarEnabled)
                 return;
@@ -183,12 +203,13 @@ namespace MarkPad.Document.Controls
             floatingToolBar.Hide();
         }
 
-        private void ShowFloatingToolBar()
+        void ShowFloatingToolBar()
         {
             // Find the screen position of the start of the selection
             var selectionStartLocation = Editor.Document.GetLocation(Editor.SelectionStart);
             var selectionStartPosition = new TextViewPosition(selectionStartLocation);
-            var selectionStartPoint = Editor.TextArea.TextView.GetVisualPosition(selectionStartPosition, VisualYPosition.LineTop);
+            var selectionStartPoint = Editor.TextArea.TextView.GetVisualPosition(selectionStartPosition,
+                VisualYPosition.LineTop);
 
             var popupPoint = new Point(
                 selectionStartPoint.X + 30,
@@ -217,7 +238,7 @@ namespace MarkPad.Document.Controls
         {
             var selectedText = GetSelectedText();
             if (string.IsNullOrWhiteSpace(selectedText)) return;
-            
+
             Editor.SelectedText = selectedText.ToggleBold(!selectedText.IsBold());
         }
 
@@ -242,7 +263,7 @@ namespace MarkPad.Document.Controls
             }
         }
 
-        private string GetSelectedText()
+        string GetSelectedText()
         {
             var textArea = Editor.TextArea;
             // What would you do if the selected text is empty? I vote: Nothing.
@@ -252,7 +273,7 @@ namespace MarkPad.Document.Controls
             return textArea.Selection.GetText();
         }
 
-        private void ToggleCodeBlock()
+        void ToggleCodeBlock()
         {
             var lines = Editor.SelectedText.Split(Environment.NewLine.ToCharArray());
             var firstLine = lines[0];
@@ -265,11 +286,12 @@ namespace MarkPad.Document.Controls
             {
                 var spacer = IndentType == IndentType.Spaces ? Spaces : "\t";
 
-                Editor.SelectedText = spacer + Editor.SelectedText.Replace(Environment.NewLine, Environment.NewLine + spacer);                
+                Editor.SelectedText = spacer +
+                                      Editor.SelectedText.Replace(Environment.NewLine, Environment.NewLine + spacer);
             }
         }
 
-        private void RemoveCodeBlock(string replace, int numberSpaces)
+        void RemoveCodeBlock(string replace, int numberSpaces)
         {
             Editor.SelectedText = Editor.SelectedText.Replace((Environment.NewLine + replace), Environment.NewLine);
 
@@ -307,12 +329,13 @@ namespace MarkPad.Document.Controls
                     hyperlink = vm.GetHyperlink(hyperlink);
                     if (hyperlink != null)
                     {
-                        textArea.Selection.ReplaceSelectionWithText(string.Format("[{0}]({1})", hyperlink.Text, hyperlink.Url));
+                        textArea.Selection.ReplaceSelectionWithText(string.Format("[{0}]({1})", hyperlink.Text,
+                            hyperlink.Url));
                     }
                 });
         }
 
-        private void CanEditDocument(object sender, CanExecuteRoutedEventArgs e)
+        void CanEditDocument(object sender, CanExecuteRoutedEventArgs e)
         {
             if (Editor != null && Editor.TextArea != null && Editor.TextArea.Selection != null)
             {
@@ -333,7 +356,8 @@ namespace MarkPad.Document.Controls
 
             var offset = Editor.Document.GetOffset(editorPosition.Value.Line, editorPosition.Value.Column);
             var errorSegments = SpellCheckProvider.GetSpellCheckErrors();
-            var misspelledSegment = errorSegments.FirstOrDefault(segment => segment.StartOffset <= offset && segment.EndOffset >= offset);
+            var misspelledSegment =
+                errorSegments.FirstOrDefault(segment => segment.StartOffset <= offset && segment.EndOffset >= offset);
             if (misspelledSegment == null) return;
 
             // check if the clicked offset is the beginning or end of line to prevent snapping to it (like in text selection) with GetPositionFromPoint
@@ -345,19 +369,21 @@ namespace MarkPad.Document.Controls
             }
 
             EditorContextMenu.Tag = misspelledSegment;
-            EditorContextMenu.ItemsSource = SpellCheckProvider.GetSpellcheckSuggestions(editor.Document.GetText(misspelledSegment));
+            EditorContextMenu.ItemsSource =
+                SpellCheckProvider.GetSpellcheckSuggestions(editor.Document.GetText(misspelledSegment));
             e.Handled = false;
         }
 
         void SpellcheckerWordClick(object sender, RoutedEventArgs e)
         {
-            var word = (string)(e.OriginalSource as FrameworkElement).DataContext;
-            var segment = (TextSegment)EditorContextMenu.Tag;
+            var word = (string) (e.OriginalSource as FrameworkElement).DataContext;
+            var segment = (TextSegment) EditorContextMenu.Tag;
             Editor.Document.Replace(segment, word);
-         }
+        }
 
         public static readonly DependencyProperty SpellcheckProviderProperty =
-            DependencyProperty.Register("SpellCheckProvider", typeof (ISpellCheckProvider), typeof (MarkdownEditor), new PropertyMetadata(default(ISpellCheckProvider)));
+            DependencyProperty.Register("SpellCheckProvider", typeof (ISpellCheckProvider), typeof (MarkdownEditor),
+                new PropertyMetadata(default(ISpellCheckProvider)));
 
         public ISpellCheckProvider SpellCheckProvider
         {
@@ -366,12 +392,12 @@ namespace MarkPad.Document.Controls
         }
 
         public static readonly DependencyProperty IsColorsInvertedProperty =
-            DependencyProperty.Register("IsColorsInverted", typeof(bool), typeof(MarkdownEditor));
+            DependencyProperty.Register("IsColorsInverted", typeof (bool), typeof (MarkdownEditor));
 
         public bool IsColorsInverted
         {
-            get { return (bool) GetValue(IsColorsInvertedProperty); } 
-            set { SetValue(IsColorsInvertedProperty, value);}
+            get { return (bool) GetValue(IsColorsInvertedProperty); }
+            set { SetValue(IsColorsInvertedProperty, value); }
         }
     }
 }

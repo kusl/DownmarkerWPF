@@ -13,7 +13,7 @@ namespace MarkPad.Helpers
             {
                 DependencyObject child = VisualTreeHelper.GetChild(obj, i);
                 if (child != null && child is T)
-                    return (T)child;
+                    return (T) child;
 
                 T childOfChild = FindVisualChild<T>(child);
                 if (childOfChild != null)
@@ -53,7 +53,7 @@ namespace MarkPad.Helpers
             AB[1] = pointB.Y - pointA.Y;
             BC[0] = pointC.X - pointB.X;
             BC[1] = pointC.Y - pointB.Y;
-            double dot = AB[0] * BC[0] + AB[1] * BC[1];
+            double dot = AB[0]*BC[0] + AB[1]*BC[1];
 
             return dot;
         }
@@ -67,7 +67,7 @@ namespace MarkPad.Helpers
             AB[1] = pointB.Y - pointA.Y;
             AC[0] = pointC.X - pointA.X;
             AC[1] = pointC.Y - pointA.Y;
-            double cross = AB[0] * AC[1] - AB[1] * AC[0];
+            double cross = AB[0]*AC[1] - AB[1]*AC[0];
 
             return cross;
         }
@@ -78,14 +78,14 @@ namespace MarkPad.Helpers
             double d1 = pointA.X - pointB.X;
             double d2 = pointA.Y - pointB.Y;
 
-            return Math.Sqrt(d1 * d1 + d2 * d2);
+            return Math.Sqrt(d1*d1 + d2*d2);
         }
 
         //Compute the distance from AB to C
         //if isSegment is true, AB is a segment, not a line.
         static double LineToPointDistance2D(Point pointA, Point pointB, Point pointC, bool isSegment)
         {
-            double dist = CrossProduct(pointA, pointB, pointC) / Distance(pointA, pointB);
+            double dist = CrossProduct(pointA, pointB, pointC)/Distance(pointA, pointB);
             if (isSegment)
             {
                 double dot1 = DotProduct(pointA, pointB, pointC);

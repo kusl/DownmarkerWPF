@@ -9,7 +9,7 @@ namespace MarkPad.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var fileName = ((string) values[0]).ToLower();
-            var path = ((string)values[1]).ToLower();
+            var path = ((string) values[1]).ToLower();
 
             return fileName.StartsWith(path);
         }

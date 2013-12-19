@@ -5,7 +5,7 @@
     /// </summary>
     public class FileReference
     {
-        public FileReference(string fullPath, string relativePath, bool saved   )
+        public FileReference(string fullPath, string relativePath, bool saved)
         {
             FullPath = fullPath;
             RelativePath = relativePath;

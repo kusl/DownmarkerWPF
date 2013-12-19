@@ -8,8 +8,10 @@ namespace MarkPad.Document.Controls
 {
     public class FloatingToolBar : Popup
     {
-        public static readonly DependencyProperty CommandTargetProperty = DependencyProperty.Register("CommandTarget", typeof(ICommandSource), typeof(FloatingToolBar), new UIPropertyMetadata(null));
-        private Window window;
+        public static readonly DependencyProperty CommandTargetProperty = DependencyProperty.Register("CommandTarget",
+            typeof (ICommandSource), typeof (FloatingToolBar), new UIPropertyMetadata(null));
+
+        Window window;
 
         public FloatingToolBar()
         {
@@ -22,7 +24,7 @@ namespace MarkPad.Document.Controls
 
         public ICommandSource CommandTarget
         {
-            get { return (ICommandSource)GetValue(CommandTargetProperty); }
+            get { return (ICommandSource) GetValue(CommandTargetProperty); }
             set { SetValue(CommandTargetProperty, value); }
         }
 
@@ -40,13 +42,13 @@ namespace MarkPad.Document.Controls
             }
         }
 
-        private void ControlLoaded(object sender, RoutedEventArgs e)
+        void ControlLoaded(object sender, RoutedEventArgs e)
         {
             window = Window.GetWindow(this);
             Attach();
         }
 
-        private void Attach()
+        void Attach()
         {
             if (PlacementTarget == null)
                 return;
@@ -78,26 +80,26 @@ namespace MarkPad.Document.Controls
             UpdateOpacity();
         }
 
-		public void Show(UIElement target, Point point)
-		{
-			Hide();
+        public void Show(UIElement target, Point point)
+        {
+            Hide();
 
-			Placement = PlacementMode.Relative;
-			PlacementTarget = target;
-			HorizontalOffset = point.X;
-			VerticalOffset = point.Y;
-			
-			UpdateOpacity();
-			IsOpen = true;
-			UpdateOpacity();
-		}
+            Placement = PlacementMode.Relative;
+            PlacementTarget = target;
+            HorizontalOffset = point.X;
+            VerticalOffset = point.Y;
 
-        private void MouseMoved(object sender, MouseEventArgs e)
+            UpdateOpacity();
+            IsOpen = true;
+            UpdateOpacity();
+        }
+
+        void MouseMoved(object sender, MouseEventArgs e)
         {
             UpdateOpacity();
         }
 
-        private void UpdateOpacity()
+        void UpdateOpacity()
         {
             if (Content.IsMouseDirectlyOver)
             {
@@ -118,7 +120,7 @@ namespace MarkPad.Document.Controls
             }
             else
             {
-                Content.Opacity = ((30 - distance) / 30.00) + 0.2;
+                Content.Opacity = ((30 - distance)/30.00) + 0.2;
             }
 
             if (Content.Opacity < 0.2)
@@ -127,12 +129,12 @@ namespace MarkPad.Document.Controls
             }
         }
 
-        private void WindowDeactivated(object sender, EventArgs e)
+        void WindowDeactivated(object sender, EventArgs e)
         {
             Hide();
         }
 
-        private void LocationChanged(object sender, EventArgs e)
+        void LocationChanged(object sender, EventArgs e)
         {
             if (IsOpen)
             {
@@ -140,17 +142,17 @@ namespace MarkPad.Document.Controls
             }
         }
 
-        private void ControlUnloaded(object sender, RoutedEventArgs e)
+        void ControlUnloaded(object sender, RoutedEventArgs e)
         {
             Detach();
         }
 
-        private void Hide(object sender, RoutedEventArgs e)
+        void Hide(object sender, RoutedEventArgs e)
         {
             IsOpen = false;
         }
 
-        private void Detach()
+        void Detach()
         {
             if (PlacementTarget == null)
                 return;

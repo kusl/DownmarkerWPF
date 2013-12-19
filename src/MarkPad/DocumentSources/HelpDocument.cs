@@ -7,9 +7,10 @@ namespace MarkPad.DocumentSources
 {
     public class HelpDocument : NewMarkpadDocument
     {
-        public HelpDocument(string title, string helpText, IDocumentFactory documentFactory, IFileSystem fileSystem) 
+        public HelpDocument(string title, string helpText, IDocumentFactory documentFactory, IFileSystem fileSystem)
             : base(fileSystem, documentFactory, title, helpText)
-        { }
+        {
+        }
 
         public override Task<IMarkpadDocument> Save()
         {

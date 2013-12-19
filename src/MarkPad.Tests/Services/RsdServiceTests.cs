@@ -58,7 +58,7 @@ namespace MarkPad.Tests.Services
             Assert.Equal("http://funnelweblog.net/blogapi", result.MetaWebLogApiLink);
         }
 
-        private const string FunnelWebRsdFile = @"<rsd version=""1.0"" xmlns=""http://archipelago.phrasewise.com/rsd"">
+        const string FunnelWebRsdFile = @"<rsd version=""1.0"" xmlns=""http://archipelago.phrasewise.com/rsd"">
   <service>
     <engineName>FunnelWeblog</engineName>
     <engineLink>http://www.funnelweblog.com/</engineLink>
@@ -69,11 +69,11 @@ namespace MarkPad.Tests.Services
   </service>
 </rsd>";
 
-        private const string CodeplexProjectPage = @"<!DOCTYPE html><html xmlns=""http://www.w3.org/1999/xhtml"" xml:lang=""en"" lang=""en"">
+        const string CodeplexProjectPage = @"<!DOCTYPE html><html xmlns=""http://www.w3.org/1999/xhtml"" xml:lang=""en"" lang=""en"">
 <head>
 <link rel=""EditURI"" type=""application/rsd+xml"" title=""RSD"" href='http://project.codeplex.com/rsd' /></head><body></body></html>";
 
-        private const string CodeplexProjectRsdFile = @"<rsd version=""1.0"">
+        const string CodeplexProjectRsdFile = @"<rsd version=""1.0"">
 <service>
 <engineName>CodePlex</engineName>
 <engineLink>http://www.codeplex.com</engineLink>

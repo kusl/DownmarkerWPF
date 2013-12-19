@@ -9,7 +9,7 @@ namespace MarkPad.Document.Controls
             InitializeComponent();
         }
 
-        private void DragMoveWindow(object sender, MouseButtonEventArgs e)
+        void DragMoveWindow(object sender, MouseButtonEventArgs e)
         {
             if (e.RightButton != MouseButtonState.Pressed && e.MiddleButton != MouseButtonState.Pressed)
                 DragMove();

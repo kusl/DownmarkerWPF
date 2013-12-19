@@ -23,7 +23,8 @@ using MarkPad.Updater;
 
 namespace MarkPad
 {
-    public class ShellViewModel : Conductor<IScreen>, IShell, IHandle<FileOpenEvent>, IHandle<SettingsCloseEvent>, IHandle<OpenFromWebEvent>, IDoWorkAsyncronously
+    public class ShellViewModel : Conductor<IScreen>, IShell, IHandle<FileOpenEvent>, IHandle<SettingsCloseEvent>,
+        IHandle<OpenFromWebEvent>, IDoWorkAsyncronously
     {
         const string ShowSettingsState = "ShowSettings";
         const string NewDocumentDefaultName = "New Document";
@@ -36,7 +37,7 @@ namespace MarkPad
         readonly IDocumentFactory documentFactory;
         readonly object workLock = new object();
 
-        private int numberOfNewDocuments;
+        int numberOfNewDocuments;
 
         public ShellViewModel(
             IDialogService dialogService,
@@ -91,7 +92,7 @@ namespace MarkPad
         public ICommand OpenFromWebCommand { get; private set; }
         public ICommand CloseDocumentCommand { get; private set; }
 
-        private string currentState;
+        string currentState;
 
         public string CurrentState
         {
@@ -101,14 +102,20 @@ namespace MarkPad
                 currentState = value;
 
                 if (ActiveDocumentViewModel == null) return;
-                MDI.HtmlPreview.Visibility = (currentState == ShowSettingsState) ? Visibility.Hidden : Visibility.Visible;
+                MDI.HtmlPreview.Visibility = (currentState == ShowSettingsState)
+                    ? Visibility.Hidden
+                    : Visibility.Visible;
             }
         }
 
         public MdiViewModel MDI { get; private set; }
         public SettingsViewModel Settings { get; private set; }
         public UpdaterViewModel Updater { get; set; }
-        public DocumentViewModel ActiveDocumentViewModel { get { return MDI.ActiveItem as DocumentViewModel; } }
+
+        public DocumentViewModel ActiveDocumentViewModel
+        {
+            get { return MDI.ActiveItem as DocumentViewModel; }
+        }
 
         public string WorkingText { get; private set; }
         public bool IsWorking { get; private set; }
@@ -120,7 +127,7 @@ namespace MarkPad
                 IsWorking = true;
                 loadingMessages.Add(work);
                 WorkingText = work;
-                var view = (DependencyObject)GetView();
+                var view = (DependencyObject) GetView();
                 AutomationProperties.SetHelpText(view, "Busy");
 
                 return new DelegateDisposable(() =>
@@ -168,7 +175,7 @@ namespace MarkPad
             documentViewModel.Update();
         }
 
-        private string BuildNewDocumentName()
+        string BuildNewDocumentName()
         {
             var newDocumentName = NewDocumentDefaultName;
             var newItemNo = ++numberOfNewDocuments;
@@ -176,19 +183,23 @@ namespace MarkPad
             return newDocumentName;
         }
 
-        private static string CreateJekyllHeader()
+        static string CreateJekyllHeader()
         {
             const string permalink = "new-page.html";
             const string title = "New Post";
             const string description = "Some Description";
             var date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss zzz");
-            return string.Format("---\r\nlayout: post\r\ntitle: {0}\r\npermalink: {1}\r\ndescription: {2}\r\ndate: {3}\r\ntags: \"some tags here\"\r\n---\r\n\r\n", title, permalink, description, date);
+            return
+                string.Format(
+                    "---\r\nlayout: post\r\ntitle: {0}\r\npermalink: {1}\r\ndescription: {2}\r\ndate: {3}\r\ntags: \"some tags here\"\r\n---\r\n\r\n",
+                    title, permalink, description, date);
         }
 
         public void OpenDocument()
         {
             if (IsWorking) return;
-            var path = dialogService.GetFileOpenPath("Open a markdown document.", Constants.ExtensionFilter + "|Any File (*.*)|*.*");
+            var path = dialogService.GetFileOpenPath("Open a markdown document.",
+                Constants.ExtensionFilter + "|Any File (*.*)|*.*");
             if (path == null)
                 return;
 
@@ -206,7 +217,7 @@ namespace MarkPad
             }
         }
 
-        private async Task SaveDocument()
+        async Task SaveDocument()
         {
             if (IsWorking) return;
             var doc = MDI.ActiveItem as DocumentViewModel;
@@ -219,7 +230,7 @@ namespace MarkPad
             }
         }
 
-        private async Task SaveDocumentAs()
+        async Task SaveDocumentAs()
         {
             if (IsWorking) return;
             var doc = MDI.ActiveItem as DocumentViewModel;
@@ -288,7 +299,7 @@ namespace MarkPad
             OpenHelpDocument("MarkPad Help", "MarkPadHelp");
         }
 
-        private void OpenHelpDocument(string title, string content)
+        void OpenHelpDocument(string title, string content)
         {
             if (!IsDocumentAlreadyOpen(title))
             {
@@ -298,12 +309,12 @@ namespace MarkPad
             }
         }
 
-        private bool IsDocumentAlreadyOpen(string screenName)
+        bool IsDocumentAlreadyOpen(string screenName)
         {
             return MDI.Items.Any(item => item.DisplayName == screenName);
         }
 
-        private static string GetHelpText(string file)
+        static string GetHelpText(string file)
         {
             var helpResourceFile = "MarkPad." + file + ".md";
             using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(helpResourceFile))
@@ -313,7 +324,7 @@ namespace MarkPad
             }
         }
 
-        private async Task PublishDocument()
+        async Task PublishDocument()
         {
             var doc = MDI.ActiveItem as DocumentViewModel;
 
@@ -324,7 +335,7 @@ namespace MarkPad
             }
         }
 
-        private async Task OpenFromWeb()
+        async Task OpenFromWeb()
         {
             var result = await openDocumentFromWeb.Open();
             if (result.Success != true)
@@ -335,7 +346,9 @@ namespace MarkPad
 
             var metaWebLogItem = new WebDocumentItem(null, eventAggregator, postId, title, result.SelectedBlog);
 
-            await OpenDocument(metaWebLogItem, title, () => documentFactory.OpenBlogPost(result.SelectedBlog, postId, title));
+            await
+                OpenDocument(metaWebLogItem, title,
+                    () => documentFactory.OpenBlogPost(result.SelectedBlog, postId, title));
         }
 
         public void Handle(SettingsCloseEvent message)
@@ -355,7 +368,9 @@ namespace MarkPad
         {
             var metaWebLogItem = new WebDocumentItem(null, eventAggregator, message.Id, message.Name, message.Blog);
 
-            await OpenDocument(metaWebLogItem, message.Name, () => documentFactory.OpenBlogPost(message.Blog, message.Id, message.Name));
+            await
+                OpenDocument(metaWebLogItem, message.Name,
+                    () => documentFactory.OpenBlogPost(message.Blog, message.Id, message.Name));
         }
 
         async Task OpenDocument(ISiteItem siteItem, string documentName, Func<Task<IMarkpadDocument>> openDocument)
@@ -385,13 +400,15 @@ namespace MarkPad
             }
         }
 
-        private void DoDefaultErrorHandling(Exception e, string operation)
+        void DoDefaultErrorHandling(Exception e, string operation)
         {
             // We don't care about cancelled exceptions
             if (e is TaskCanceledException)
                 return;
 
-            dialogService.ShowError((string.IsNullOrEmpty(operation) ? "Error occured" : string.Format("Failed to {0}", operation)), e.Message, null);            
+            dialogService.ShowError(
+                (string.IsNullOrEmpty(operation) ? "Error occured" : string.Format("Failed to {0}", operation)),
+                e.Message, null);
         }
 
         public SearchSettings SearchSettings { get; private set; }
@@ -424,7 +441,9 @@ namespace MarkPad
         {
             if (ActiveDocumentViewModel == null) return;
 
-            var selectSearch = SearchSettings.SelectSearch || (searchType == SearchType.Next || searchType == SearchType.Prev || searchType == SearchType.Replace);
+            var selectSearch = SearchSettings.SelectSearch ||
+                               (searchType == SearchType.Next || searchType == SearchType.Prev ||
+                                searchType == SearchType.Replace);
 
             ActiveDocumentViewModel.SearchProvider.DoSearch(searchType, selectSearch);
 

@@ -17,15 +17,16 @@ namespace MarkPad.Settings.UI
     {
         readonly IDialogService dialogService;
         readonly Func<string, IMetaWeblogService> getMetaWeblog;
-        private readonly IRsdService discoveryService;
+        readonly IRsdService discoveryService;
 
-        public BlogSettingsViewModel(IDialogService dialogService, Func<string, IMetaWeblogService> getMetaWeblog, IRsdService discoveryService)
+        public BlogSettingsViewModel(IDialogService dialogService, Func<string, IMetaWeblogService> getMetaWeblog,
+            IRsdService discoveryService)
         {
             this.dialogService = dialogService;
             this.getMetaWeblog = getMetaWeblog;
             this.discoveryService = discoveryService;
 
-            BlogLanguages = new List<string> { "HTML", "Markdown" };
+            BlogLanguages = new List<string> {"HTML", "Markdown"};
         }
 
         public override string DisplayName
@@ -84,10 +85,10 @@ namespace MarkPad.Settings.UI
                     return null;
 
                 var bi = new FetchedBlogInfo
-                         {
-                             BlogInfo = CurrentBlog.BlogInfo,
-                             Name = CurrentBlog.BlogInfo.blogName
-                         };
+                {
+                    BlogInfo = CurrentBlog.BlogInfo,
+                    Name = CurrentBlog.BlogInfo.blogName
+                };
 
                 if (APIBlogs == null) APIBlogs = new ObservableCollection<FetchedBlogInfo>();
 
@@ -126,11 +127,13 @@ namespace MarkPad.Settings.UI
 
             IsFetching = true;
 
-            var fetchingTask = CurrentBlog.WebSourceType == WebSourceType.MetaWebLog ? FetchMetaWeblogApi() : FetchGithubBranches();
+            var fetchingTask = CurrentBlog.WebSourceType == WebSourceType.MetaWebLog
+                ? FetchMetaWeblogApi()
+                : FetchGithubBranches();
             fetchingTask
                 .ContinueWith(UpdateBlogList, TaskScheduler.FromCurrentSynchronizationContext())
                 .ContinueWith(HandleFetchError)
-                .ContinueWith(t=>IsFetching = false);
+                .ContinueWith(t => IsFetching = false);
         }
 
         async Task<BlogInfo[]> FetchGithubBranches()
@@ -151,7 +154,7 @@ namespace MarkPad.Settings.UI
             var proxy = getMetaWeblog(CurrentBlog.WebAPI);
             var fetchingTask = proxy
                 .GetUsersBlogsAsync(CurrentBlog);
-                
+
             return fetchingTask;
         }
 
@@ -167,7 +170,7 @@ namespace MarkPad.Settings.UI
             }
         }
 
-        private void UpdateBlogList(Task<BlogInfo[]> t)
+        void UpdateBlogList(Task<BlogInfo[]> t)
         {
             t.PropagateExceptions();
 
@@ -175,18 +178,20 @@ namespace MarkPad.Settings.UI
 
             foreach (var blogInfo in t.Result)
             {
-                newAPIBlogs.Add(new FetchedBlogInfo { Name = blogInfo.blogName, BlogInfo = blogInfo });
+                newAPIBlogs.Add(new FetchedBlogInfo {Name = blogInfo.blogName, BlogInfo = blogInfo});
             }
 
             APIBlogs = newAPIBlogs;
         }
 
-        private void HandleFetchError(Task t)
+        void HandleFetchError(Task t)
         {
             if (!t.IsFaulted)
                 return;
 
-            dialogService.ShowError("Markpad", "There was a problem contacting the website. Check the settings and try again.", t.Exception.GetErrorMessage());
+            dialogService.ShowError("Markpad",
+                "There was a problem contacting the website. Check the settings and try again.",
+                t.Exception.GetErrorMessage());
         }
 
         public void DiscoverAddress()
@@ -206,7 +211,8 @@ namespace MarkPad.Settings.UI
                             CurrentBlog.WebAPI = t.Result.MetaWebLogApiLink;
                         else
                         {
-                            const string errorText = "Make sure you have a rsd.xml in the root of your blog, or put a link to it on your blog homepage head";
+                            const string errorText =
+                                "Make sure you have a rsd.xml in the root of your blog, or put a link to it on your blog homepage head";
                             dialogService.ShowError("Discovery failed", errorText, t.Result.FailMessage);
                         }
                         DiscoveringAddress = false;
@@ -214,7 +220,8 @@ namespace MarkPad.Settings.UI
             }
             else
             {
-                dialogService.ShowWarning("Enter blog address", "Enter your blog address to discover the MetaWeblog Uri", null);
+                dialogService.ShowWarning("Enter blog address", "Enter your blog address to discover the MetaWeblog Uri",
+                    null);
             }
         }
 

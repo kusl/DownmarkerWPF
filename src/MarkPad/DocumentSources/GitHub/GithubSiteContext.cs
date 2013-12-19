@@ -10,11 +10,11 @@ namespace MarkPad.DocumentSources.GitHub
     {
         readonly IGithubApi github;
 
-        public GithubSiteContext(BlogSetting blog, 
+        public GithubSiteContext(BlogSetting blog,
             IWebDocumentService webDocumentService,
             IGithubApi github,
             IEventAggregator eventAggregator) :
-            base(blog, webDocumentService, eventAggregator)
+                base(blog, webDocumentService, eventAggregator)
         {
             this.github = github;
         }

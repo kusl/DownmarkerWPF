@@ -14,20 +14,20 @@ namespace MarkPad.DocumentSources.GitHub
     public class GithubApi : IGithubApi
     {
         public const string ClientId = "ed0cdbf084078f60b8a3";
-        private const string ClientSecret = "a0a442815b7530386c90088a98cfd018877624d2";
+        const string ClientSecret = "a0a442815b7530386c90088a98cfd018877624d2";
         public const string RedirectUri = "http://vikingco.de";
-        private const string Accesstokenuri = "https://github.com/login/oauth/access_token";
-        private const string ApiBaseUrl = "https://api.github.com/";
+        const string Accesstokenuri = "https://github.com/login/oauth/access_token";
+        const string ApiBaseUrl = "https://api.github.com/";
 
         public async Task<string> GetToken(string code)
         {
             var c = new HttpClient();
             var data = new Dictionary<string, string>
-                       {
-                           {"client_id", ClientId},
-                           {"client_secret", ClientSecret},
-                           {"code", code}
-                       };
+            {
+                {"client_id", ClientId},
+                {"client_secret", ClientSecret},
+                {"code", code}
+            };
             var content = new FormUrlEncodedContent(data);
             var request = await c.PostAsync(Accesstokenuri, content);
             var result = await request.Content.ReadAsStringAsync();
@@ -49,7 +49,7 @@ namespace MarkPad.DocumentSources.GitHub
 
             var result = await respose.Content.ReadAsAsync<List<GitBranch>>();
 
-            return result.Select(r => new BlogInfo { blogid = r.name, blogName = r.name }).ToArray();
+            return result.Select(r => new BlogInfo {blogid = r.name, blogName = r.name}).ToArray();
         }
 
         public async Task<Post[]> FetchFiles(string user, string repositoryName, string branch, string token)
@@ -85,7 +85,7 @@ namespace MarkPad.DocumentSources.GitHub
         {
             var commit = deserializeObject.commit;
             var tree = commit.commit.tree;
-            var treeUrl = (string)tree.url;
+            var treeUrl = (string) tree.url;
             return treeUrl;
         }
 
@@ -98,7 +98,8 @@ namespace MarkPad.DocumentSources.GitHub
             return await GetContent(restResponse);
         }
 
-        public async Task<Tuple<GitTree, GitCommit>> NewTree(string token, string username, string repository, string branch, GitTree tree)
+        public async Task<Tuple<GitTree, GitCommit>> NewTree(string token, string username, string repository,
+            string branch, GitTree tree)
         {
             var client = new HttpClient();
             //Get base commit ref
@@ -117,18 +118,19 @@ namespace MarkPad.DocumentSources.GitHub
 
         void LogResult(HttpResponseMessage httpResponseMessage)
         {
-            
         }
 
-        async Task<HttpResponseMessage> FinaliseCommit(string token, string username, string repository, string branch, string shaNewCommit,
-                                   HttpClient client)
+        async Task<HttpResponseMessage> FinaliseCommit(string token, string username, string repository, string branch,
+            string shaNewCommit,
+            HttpClient client)
         {
             var url = string.Format("/repos/{0}/{1}/git/refs/heads/{2}", username, repository, branch);
-            return await client.PutAsJsonAsync(GetUrl(url, token), new { sha = shaNewCommit});
+            return await client.PutAsJsonAsync(GetUrl(url, token), new {sha = shaNewCommit});
         }
 
-        static async Task<GitCommit> CreateGitCommit(string token, string username, string repository, string shaLatestCommit, GitTree gitTree,
-                                         HttpClient client)
+        static async Task<GitCommit> CreateGitCommit(string token, string username, string repository,
+            string shaLatestCommit, GitTree gitTree,
+            HttpClient client)
         {
             var gitCommit = new GitCommit
             {
@@ -152,7 +154,8 @@ namespace MarkPad.DocumentSources.GitHub
             return await respose.Content.ReadAsAsync<GitTree>();
         }
 
-        static async Task<string> GetBaseTreeSha(string token, string username, string repository, string shaLatestCommit, HttpClient client)
+        static async Task<string> GetBaseTreeSha(string token, string username, string repository,
+            string shaLatestCommit, HttpClient client)
         {
             var url = string.Format("/repos/{0}/{1}/git/commits/{2}", username, repository, shaLatestCommit);
             var result = await client.GetAsync(GetUrl(url, token));
@@ -160,7 +163,8 @@ namespace MarkPad.DocumentSources.GitHub
             return baseTreeResult.tree.sha;
         }
 
-        static async Task<string> GetLatestCommitSha(string token, string username, string repository, string branch, HttpClient client)
+        static async Task<string> GetLatestCommitSha(string token, string username, string repository, string branch,
+            HttpClient client)
         {
             var url = string.Format("/repos/{0}/{1}/git/refs/heads/{2}", username, repository, branch);
             var response = await client.GetAsync(GetUrl(url, token));
@@ -188,7 +192,7 @@ namespace MarkPad.DocumentSources.GitHub
             return returnValue;
         }
 
-        private static string GetUrl(string path, string accessToken)
+        static string GetUrl(string path, string accessToken)
         {
             return string.Format("{0}/{1}?access_token={2}", ApiBaseUrl.TrimEnd('/'), path.TrimStart('/'), accessToken);
         }

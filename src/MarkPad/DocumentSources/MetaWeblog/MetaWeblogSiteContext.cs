@@ -22,7 +22,7 @@ namespace MarkPad.DocumentSources.MetaWeblog
 
         protected override Task<Post[]> GetItems()
         {
-            return getMetaWeblog(Blog.WebAPI).GetRecentPostsAsync(Blog, 100);            
+            return getMetaWeblog(Blog.WebAPI).GetRecentPostsAsync(Blog, 100);
         }
     }
 }

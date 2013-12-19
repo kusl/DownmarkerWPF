@@ -15,13 +15,13 @@ namespace MarkPad.DocumentSources.MetaWeblog
 {
     public class OpenFromWebViewModel : Screen
     {
-        private readonly IDialogService dialogService;
-        private readonly Func<string, IMetaWeblogService> getMetaWeblog;
-        private readonly ITaskSchedulerFactory taskScheduler;
+        readonly IDialogService dialogService;
+        readonly Func<string, IMetaWeblogService> getMetaWeblog;
+        readonly ITaskSchedulerFactory taskScheduler;
         readonly IGithubApi github;
 
         public OpenFromWebViewModel(
-            IDialogService dialogService, 
+            IDialogService dialogService,
             Func<string, IMetaWeblogService> getMetaWeblog,
             ITaskSchedulerFactory taskScheduler, IGithubApi github)
         {
@@ -45,19 +45,16 @@ namespace MarkPad.DocumentSources.MetaWeblog
 
         public Entry CurrentPost
         {
-            get
-            {
-                return new Entry { Key = SelectedPost.title, Value = SelectedPost };
-            }
-            set
-            {
-                SelectedPost = value.Value;
-            }
+            get { return new Entry {Key = SelectedPost.title, Value = SelectedPost}; }
+            set { SelectedPost = value.Value; }
         }
 
         public ObservableCollection<Entry> Posts { get; private set; }
 
-        public bool CanFetch { get { return SelectedBlog != null; } }
+        public bool CanFetch
+        {
+            get { return SelectedBlog != null; }
+        }
 
         protected override void OnActivate()
         {
@@ -99,22 +96,23 @@ namespace MarkPad.DocumentSources.MetaWeblog
             }
             else
             {
-                fetchingTask = github.FetchFiles(SelectedBlog.Username, SelectedBlog.WebAPI, SelectedBlog.BlogInfo.blogid, SelectedBlog.Token);
+                fetchingTask = github.FetchFiles(SelectedBlog.Username, SelectedBlog.WebAPI,
+                    SelectedBlog.BlogInfo.blogid, SelectedBlog.Token);
             }
 
             return fetchingTask
-                    .ContinueWith(UpdateBlogPosts, taskScheduler.FromCurrentSynchronisationContext())
-                    .ContinueWith(HandleFetchError)
-                    .ContinueWith(t => IsFetching = false);
+                .ContinueWith(UpdateBlogPosts, taskScheduler.FromCurrentSynchronisationContext())
+                .ContinueWith(HandleFetchError)
+                .ContinueWith(t => IsFetching = false);
         }
 
-        private void UpdateBlogPosts(Task<Post[]> t)
+        void UpdateBlogPosts(Task<Post[]> t)
         {
             t.PropagateExceptions();
 
             foreach (var p in t.Result)
             {
-                Posts.Add(new Entry { Key = p.title, Value = p });
+                Posts.Add(new Entry {Key = p.title, Value = p});
             }
 
             var topPost = Posts.FirstOrDefault();
@@ -122,12 +120,14 @@ namespace MarkPad.DocumentSources.MetaWeblog
                 CurrentPost = topPost;
         }
 
-        private void HandleFetchError(Task t)
+        void HandleFetchError(Task t)
         {
             if (!t.IsFaulted)
                 return;
 
-            dialogService.ShowError("Markpad", "There was a problem contacting the website. Check the settings and try again.", t.Exception.GetErrorMessage());
+            dialogService.ShowError("Markpad",
+                "There was a problem contacting the website. Check the settings and try again.",
+                t.Exception.GetErrorMessage());
         }
     }
 }

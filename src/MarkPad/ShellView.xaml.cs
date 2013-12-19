@@ -16,7 +16,8 @@ namespace MarkPad
         readonly IList<ICanCreateNewPage> canCreateNewPagePlugins;
         readonly IList<ICanSavePage> canSavePagePlugins;
 
-        public ShellView(IEnumerable<ICanCreateNewPage> canCreateNewPagePlugins, IEnumerable<ICanSavePage> canSavePagePlugins)
+        public ShellView(IEnumerable<ICanCreateNewPage> canCreateNewPagePlugins,
+            IEnumerable<ICanSavePage> canSavePagePlugins)
         {
             this.canCreateNewPagePlugins = canCreateNewPagePlugins.ToList();
             this.canSavePagePlugins = canSavePagePlugins.ToList();
@@ -26,39 +27,42 @@ namespace MarkPad
 
             InitializeComponent();
 
-			UpdatePlugins();
+            UpdatePlugins();
         }
 
-		void UpdatePlugins()
-		{
-			CreateNewPageHook.Children.Clear();
-			foreach (var plugin in canCreateNewPagePlugins.Where(p => p.Settings.IsEnabled))
-			{
-				var button = new Button { Content = plugin.CreateNewPageLabel.ToUpper(), Tag = plugin };
-			    var capturedPlugin = plugin;
-			    button.Click += (o, e) =>
-				{
-				    var text = capturedPlugin.CreateNewPage();
-				    (DataContext as ShellViewModel).ExecuteSafely(vm => vm.NewDocument(text));
-				};
-				CreateNewPageHook.Children.Add(button);
-			}
+        void UpdatePlugins()
+        {
+            CreateNewPageHook.Children.Clear();
+            foreach (var plugin in canCreateNewPagePlugins.Where(p => p.Settings.IsEnabled))
+            {
+                var button = new Button {Content = plugin.CreateNewPageLabel.ToUpper(), Tag = plugin};
+                var capturedPlugin = plugin;
+                button.Click += (o, e) =>
+                {
+                    var text = capturedPlugin.CreateNewPage();
+                    (DataContext as ShellViewModel).ExecuteSafely(vm => vm.NewDocument(text));
+                };
+                CreateNewPageHook.Children.Add(button);
+            }
 
-			SavePageHook.Children.Clear();
-			foreach (var plugin in canSavePagePlugins.Where(p => p.Settings.IsEnabled))
-			{
-				var button = new Button { Content = plugin.SavePageLabel.ToUpper(), Tag = plugin };
-			    var capturedPlugin = plugin;
-			    button.Click += (sender, args) => (DataContext as ShellViewModel).ExecuteSafely(vm =>
-				{
-				    if (vm.ActiveDocumentViewModel == null) return;
-				    capturedPlugin.SavePage(vm.ActiveDocumentViewModel.MarkpadDocument);
-				});
-				SavePageHook.Children.Add(button);
-			}
-		}
+            SavePageHook.Children.Clear();
+            foreach (var plugin in canSavePagePlugins.Where(p => p.Settings.IsEnabled))
+            {
+                var button = new Button {Content = plugin.SavePageLabel.ToUpper(), Tag = plugin};
+                var capturedPlugin = plugin;
+                button.Click += (sender, args) => (DataContext as ShellViewModel).ExecuteSafely(vm =>
+                {
+                    if (vm.ActiveDocumentViewModel == null) return;
+                    capturedPlugin.SavePage(vm.ActiveDocumentViewModel.MarkpadDocument);
+                });
+                SavePageHook.Children.Add(button);
+            }
+        }
 
-        bool DocumentIsOpen { get { return (DataContext as ShellViewModel).Evaluate(vm => vm.MDI.ActiveItem != null); } }
+        bool DocumentIsOpen
+        {
+            get { return (DataContext as ShellViewModel).Evaluate(vm => vm.MDI.ActiveItem != null); }
+        }
 
         void DragMoveWindow(object sender, MouseButtonEventArgs e)
         {
@@ -86,7 +90,7 @@ namespace MarkPad
                 ignoreNextMouseMove = false;
                 return;
             }
-            
+
             if (WindowState != WindowState.Maximized) return;
 
             if (e.MiddleButton == MouseButtonState.Pressed) return;
@@ -97,7 +101,7 @@ namespace MarkPad
             // Calculate correct left coordinate for multi-screen system
             var mouseX = PointToScreen(Mouse.GetPosition(this)).X;
             var width = RestoreBounds.Width;
-            var left = mouseX - width / 2;
+            var left = mouseX - width/2;
             if (left < 0) left = 0;
 
             // Align left edge to fit the screen
@@ -162,7 +166,7 @@ namespace MarkPad
             e.Handled = true;
         }
 
-        private void PressedEsc()
+        void PressedEsc()
         {
             if (SearchPanel.IsVisible)
             {
@@ -170,7 +174,7 @@ namespace MarkPad
             }
         }
 
-        private void Search()
+        void Search()
         {
             if (!SearchPanel.IsVisible)
             {

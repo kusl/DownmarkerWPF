@@ -9,16 +9,17 @@ namespace MarkPad.UITests.Infrastructure
     public class MarkpadDocument : ScreenComponent<MarkpadWindow>
     {
         public MarkpadDocument(MarkpadWindow markpadWindow) : base(markpadWindow)
-        { }
+        {
+        }
 
         public string Title
         {
             get
             {
                 return ParentScreen.WhiteWindow.Get<Tab>("Items")
-                                                 .SelectedTab
-                                                 .GetElement(SearchCriteria.ByAutomationId("DocumentTitle"))
-                                                 .Current.Name;
+                    .SelectedTab
+                    .GetElement(SearchCriteria.ByAutomationId("DocumentTitle"))
+                    .Current.Name;
             }
         }
 

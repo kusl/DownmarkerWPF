@@ -11,17 +11,14 @@ namespace MarkPad.Tests.DocumentSources
 
         public override void CommitRename()
         {
-                
         }
 
         public override void UndoRename()
         {
-        
         }
 
         public override void Delete()
         {
-            
         }
 
         public override void Dispose()

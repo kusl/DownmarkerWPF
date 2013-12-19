@@ -27,12 +27,12 @@ namespace MarkPad.DocumentSources
         readonly IFileSystem fileSystem;
 
         public DocumentFactory(
-            IDialogService dialogService, 
+            IDialogService dialogService,
             IEventAggregator eventAggregator,
-            ISiteContextGenerator siteContextGenerator, 
-            IBlogService blogService, 
-            IWindowManager windowManager, 
-            Lazy<IWebDocumentService> webDocumentService, 
+            ISiteContextGenerator siteContextGenerator,
+            IBlogService blogService,
+            IWindowManager windowManager,
+            Lazy<IWebDocumentService> webDocumentService,
             IFileSystem fileSystem)
         {
             this.dialogService = dialogService;
@@ -63,7 +63,7 @@ namespace MarkPad.DocumentSources
         {
             return new HelpDocument(title, content, this, fileSystem);
         }
-        
+
         public async Task<IMarkpadDocument> OpenDocument(string path)
         {
             var contents = await fileSystem.File.ReadAllTextAsync(path);
@@ -77,7 +77,8 @@ namespace MarkPad.DocumentSources
                 return new JekyllMarkdownDocument(path, contents, context, associatedImages, this, eventAggregator,
                     dialogService, fileSystem);
             }
-            return new FileMarkdownDocument(path, contents, siteContext, associatedImages, this, eventAggregator, dialogService, fileSystem);
+            return new FileMarkdownDocument(path, contents, siteContext, associatedImages, this, eventAggregator,
+                dialogService, fileSystem);
         }
 
         IEnumerable<FileReference> GetAssociatedImages(string markdownFileContents, ISiteContext siteContext)
@@ -123,13 +124,14 @@ namespace MarkPad.DocumentSources
             var webDocument = document as WebDocument;
             if (webDocument != null)
                 categories = webDocument.Categories;
-            var pd = new Details { Title = document.Title, Categories = categories.ToArray()};
+            var pd = new Details {Title = document.Title, Categories = categories.ToArray()};
             var detailsResult = windowManager.ShowDialog(new PublishDetailsViewModel(pd, blogs));
             if (detailsResult != true)
                 return TaskEx.FromResult<IMarkpadDocument>(null);
 
-            var newDocument = new WebDocument(pd.Blog, null, pd.Title, document.MarkdownContent, new FileReference[0], this,
-                                              webDocumentService.Value, siteContextGenerator.GetWebContext(pd.Blog), fileSystem);
+            var newDocument = new WebDocument(pd.Blog, null, pd.Title, document.MarkdownContent, new FileReference[0],
+                this,
+                webDocumentService.Value, siteContextGenerator.GetWebContext(pd.Blog), fileSystem);
 
             foreach (var associatedFile in document.AssociatedFiles)
             {
@@ -145,12 +147,14 @@ namespace MarkPad.DocumentSources
 
             var content = await webDocumentService.Value.GetDocumentContent(blog, id);
 
-            return new WebDocument(blog, id, name, content, new FileReference[0], this, webDocumentService.Value, metaWeblogSiteContext, fileSystem);
+            return new WebDocument(blog, id, name, content, new FileReference[0], this, webDocumentService.Value,
+                metaWeblogSiteContext, fileSystem);
         }
 
         public async Task<IMarkpadDocument> SaveDocumentAs(IMarkpadDocument document)
         {
-            var path = dialogService.GetFileSavePath("Save As", "*.md", Constants.ExtensionFilter + "|All Files (*.*)|*.*");
+            var path = dialogService.GetFileSavePath("Save As", "*.md",
+                Constants.ExtensionFilter + "|All Files (*.*)|*.*");
 
             if (string.IsNullOrEmpty(path))
                 throw new TaskCanceledException("Save As Cancelled");
@@ -167,8 +171,10 @@ namespace MarkPad.DocumentSources
                 var newAbsolutePath = Path.Combine(newFileDirectory, associatedFile.RelativePath);
                 var newRelativePath = associatedFile.RelativePath;
 
-                newAbsolutePath = newAbsolutePath.Replace(document.Title + "_images", Path.GetFileNameWithoutExtension(path) + "_images");
-                newRelativePath = newRelativePath.Replace(document.Title + "_images", Path.GetFileNameWithoutExtension(path) + "_images");
+                newAbsolutePath = newAbsolutePath.Replace(document.Title + "_images",
+                    Path.GetFileNameWithoutExtension(path) + "_images");
+                newRelativePath = newRelativePath.Replace(document.Title + "_images",
+                    Path.GetFileNameWithoutExtension(path) + "_images");
 
                 if (associatedFile.FullPath != newAbsolutePath)
                 {
@@ -177,7 +183,8 @@ namespace MarkPad.DocumentSources
                 newDocumentAssociatedFiles.Add(new FileReference(newAbsolutePath, newRelativePath, true));
             }
 
-            var newMarkdownFile = new FileMarkdownDocument(path, document.MarkdownContent, siteContext, newDocumentAssociatedFiles, this, eventAggregator, dialogService, fileSystem);
+            var newMarkdownFile = new FileMarkdownDocument(path, document.MarkdownContent, siteContext,
+                newDocumentAssociatedFiles, this, eventAggregator, dialogService, fileSystem);
 
             return newMarkdownFile;
         }

@@ -22,9 +22,9 @@ namespace MarkPad.DocumentSources.FileSystem
         ObservableCollection<ISiteItem> items;
 
         public JekyllSiteContext(
-            IEventAggregator eventAggregator, 
-            IDialogService dialogService, 
-            IFileSystem fileSystem, 
+            IEventAggregator eventAggregator,
+            IDialogService dialogService,
+            IFileSystem fileSystem,
             IFileSystemWatcherFactory fileSystemWatcherFactory,
             string siteBasePath)
         {
@@ -83,10 +83,16 @@ namespace MarkPad.DocumentSources.FileSystem
 
         public ObservableCollection<ISiteItem> Items
         {
-            get { return items ?? (items = new FileSystemSiteItem(eventAggregator, fileSystem, SiteBasePath).Children); }
+            get
+            {
+                return items ?? (items = new FileSystemSiteItem(eventAggregator, fileSystem, SiteBasePath).Children);
+            }
         }
 
-        public bool IsLoading { get { return false; } }
+        public bool IsLoading
+        {
+            get { return false; }
+        }
 
         public string SiteBasePath
         {
@@ -115,7 +121,10 @@ namespace MarkPad.DocumentSources.FileSystem
             }
         }
 
-        public string WorkingDirectory { get { return siteBasePath; } }
+        public string WorkingDirectory
+        {
+            get { return siteBasePath; }
+        }
 
         public void Dispose()
         {

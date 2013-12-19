@@ -11,9 +11,9 @@ namespace MarkPad
 {
     public partial class App : ISingleInstanceApp
     {
-        private const string Unique = "There can be only one MARKPAD!!! (We ignore crappy sequels here)";
+        const string Unique = "There can be only one MARKPAD!!! (We ignore crappy sequels here)";
 
-        private readonly AppBootstrapper bootstrapper;
+        readonly AppBootstrapper bootstrapper;
 
         public App()
         {

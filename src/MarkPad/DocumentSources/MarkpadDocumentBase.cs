@@ -18,11 +18,11 @@ namespace MarkPad.DocumentSources
         protected readonly IFileSystem FileSystem;
 
         protected MarkpadDocumentBase(
-            string title, string content, 
+            string title, string content,
             string saveLocation,
             IEnumerable<FileReference> associatedFiles,
             IDocumentFactory documentFactory,
-            ISiteContext siteContext, 
+            ISiteContext siteContext,
             IFileSystem fileSystem)
         {
             if (title == null) throw new ArgumentNullException("title");
@@ -67,7 +67,10 @@ namespace MarkPad.DocumentSources
 
         public abstract FileReference SaveImage(Bitmap bitmap);
 
-        public IEnumerable<FileReference> AssociatedFiles { get { return associatedFiles; } }
+        public IEnumerable<FileReference> AssociatedFiles
+        {
+            get { return associatedFiles; }
+        }
 
         public void AddFile(FileReference fileReference)
         {
@@ -131,7 +134,8 @@ namespace MarkPad.DocumentSources
                 if (!FileSystem.File.Exists(filePath))
                     continue;
                 var base64String = Convert.ToBase64String(FileSystem.File.ReadAllBytes(filePath));
-                htmlDocument = htmlDocument.Replace(replace, string.Format("src=\"data:image/png;base64,{0}\"", base64String));
+                htmlDocument = htmlDocument.Replace(replace,
+                    string.Format("src=\"data:image/png;base64,{0}\"", base64String));
             }
 
             return htmlDocument;
@@ -156,8 +160,8 @@ namespace MarkPad.DocumentSources
                 .TrimStart('\\', '/') //Get rid of starting /
                 .Where(c => c == '/' || c == '\\') // select each / or \
                 .Select(c => "..") // turn each into a ..
-                .Concat(new[] { toRelativeDirectory, filename }) // concat with the image filename
-                .Where(s=>!string.IsNullOrEmpty(s)); //Remove empty parts
+                .Concat(new[] {toRelativeDirectory, filename}) // concat with the image filename
+                .Where(s => !string.IsNullOrEmpty(s)); //Remove empty parts
 
             return string.Join("\\", enumerable); //now we join with path separator giving relative path
         }

@@ -34,14 +34,14 @@ namespace MarkPad.Tests.DocumentSources
         public void isrenaming_throws_when_not_selected()
         {
             // arrange
-            var testItem = new TestItem(Substitute.For<IEventAggregator>()); 
+            var testItem = new TestItem(Substitute.For<IEventAggregator>());
 
             // act
 
             // assert
             Assert.Throws<InvalidOperationException>(() => testItem.IsRenaming = true);
         }
-        
+
         [Fact]
         public void name_gets_changed_when_item_is_being_renamed()
         {

@@ -12,14 +12,14 @@ namespace MarkPad.Converters
         static readonly Dictionary<object, string> DisplayValues = new Dictionary<object, string>();
         static readonly Dictionary<string, object> ReverseValues = new Dictionary<string, object>();
 
-        private void GetDisplayString(object value)
+        void GetDisplayString(object value)
         {
             var valueType = value.GetType();
 
             var fields = valueType.GetFields(BindingFlags.Public | BindingFlags.Static);
             foreach (var field in fields)
             {
-                var a = (DescriptionAttribute[]) field.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                var a = (DescriptionAttribute[]) field.GetCustomAttributes(typeof (DescriptionAttribute), false);
 
                 var displayString = GetDisplayStringValue(a);
                 var enumValue = field.GetValue(null);
@@ -36,12 +36,13 @@ namespace MarkPad.Converters
 
         static string GetDisplayStringValue(ICollection<DescriptionAttribute> descriptionAttributes)
         {
-            if (descriptionAttributes == null || descriptionAttributes.Count == 0) 
+            if (descriptionAttributes == null || descriptionAttributes.Count == 0)
                 return null;
             return descriptionAttributes.First().Description;
         }
 
-        protected override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        protected override object Convert(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
         {
             if (!DisplayValues.ContainsKey(value))
                 GetDisplayString(value);
@@ -49,7 +50,8 @@ namespace MarkPad.Converters
             return DisplayValues[value];
         }
 
-        protected override object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        protected override object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
         {
             if (!ReverseValues.ContainsKey(value.ToString()))
                 return null;

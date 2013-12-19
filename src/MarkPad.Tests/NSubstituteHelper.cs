@@ -13,7 +13,6 @@ namespace MarkPad.Tests
         /// <param name="task"></param>
         public static void IgnoreAwaitForNSubstituteAssertion(this Task task)
         {
-
         }
     }
 }

@@ -5,9 +5,9 @@ namespace MarkPad.Framework
 {
     public static class MarkdownHelpers
     {
-        private const string CodeDelimiter = "`";
-        private const string BoldDelimiter = "**";
-        private const string ItalicDelimiter = "*";
+        const string CodeDelimiter = "`";
+        const string BoldDelimiter = "**";
+        const string ItalicDelimiter = "*";
 
         public static bool IsItalic(this string inputString)
         {
@@ -52,7 +52,7 @@ namespace MarkPad.Framework
             return inputString.ToggleDelimiter(CodeDelimiter, makeCode);
         }
 
-        private static string ToggleDelimiter(this string inputString, string delimiter, bool turnOn)
+        static string ToggleDelimiter(this string inputString, string delimiter, bool turnOn)
         {
             //todo: Don't put the delimeters around spaces. It doesn't look nice
             // probably have to use fancy-pants regex or some shit
@@ -64,7 +64,7 @@ namespace MarkPad.Framework
             var length = inputString.Length;
 
             return inputString
-                .Substring(delimLength, length - (2 * delimLength));
+                .Substring(delimLength, length - (2*delimLength));
         }
 
         // value equality for TextSegment

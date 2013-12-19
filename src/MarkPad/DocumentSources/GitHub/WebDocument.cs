@@ -29,7 +29,7 @@ namespace MarkPad.DocumentSources.GitHub
             IWebDocumentService webDocumentService,
             WebSiteContext siteContext,
             IFileSystem fileSystem) :
-            base(title, content, blog.BlogName, associatedFiles, documentFactory, siteContext, fileSystem)
+                base(title, content, blog.BlogName, associatedFiles, documentFactory, siteContext, fileSystem)
         {
             Id = id;
             this.blog = blog;
@@ -58,15 +58,18 @@ namespace MarkPad.DocumentSources.GitHub
         {
             var save = new ButtonExtras(ButtonType.Yes, "Save", "Saves this modified post to your blog");
             var saveAs = new ButtonExtras(ButtonType.No, "Save As", "Saves this blog post as a local markdown file");
-            var publish = new ButtonExtras(ButtonType.Retry, "Publish As", "Publishes this post to another blog, or as another post");
+            var publish = new ButtonExtras(ButtonType.Retry, "Publish As",
+                "Publishes this post to another blog, or as another post");
 
             var service = new DialogMessageService(null)
             {
                 Icon = DialogMessageIcon.Question,
-                Buttons = DialogMessageButtons.Yes | DialogMessageButtons.No | DialogMessageButtons.Retry | DialogMessageButtons.Cancel,
+                Buttons =
+                    DialogMessageButtons.Yes | DialogMessageButtons.No | DialogMessageButtons.Retry |
+                    DialogMessageButtons.Cancel,
                 Title = "Markpad",
                 Text = string.Format("{0} has already been published, what do you want to do?", Title),
-                ButtonExtras = new[] { save, saveAs, publish }
+                ButtonExtras = new[] {save, saveAs, publish}
             };
 
             var result = service.Show();

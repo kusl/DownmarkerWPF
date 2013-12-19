@@ -12,7 +12,8 @@ namespace MarkPad.Document.Controls
     public partial class SiteView
     {
         public static DependencyProperty SiteContextProperty =
-            DependencyProperty.Register("SiteContext", typeof(ISiteContext), typeof(SiteView), new PropertyMetadata(default(ISiteContext)));
+            DependencyProperty.Register("SiteContext", typeof (ISiteContext), typeof (SiteView),
+                new PropertyMetadata(default(ISiteContext)));
 
         SiteItemBase currentlySelectedItem;
         DateTime? selectedTime;
@@ -26,7 +27,7 @@ namespace MarkPad.Document.Controls
             {
                 Items =
                 {
-                    new MenuItem {Header = "Rename", Command = new ActionCommand(Rename)}, 
+                    new MenuItem {Header = "Rename", Command = new ActionCommand(Rename)},
                     new MenuItem {Header = "Delete", Command = new ActionCommand(DeleteItem)}
                 }
             };
@@ -46,7 +47,7 @@ namespace MarkPad.Document.Controls
 
         public ISiteContext SiteContext
         {
-            get { return (ISiteContext)GetValue(SiteContextProperty); }
+            get { return (ISiteContext) GetValue(SiteContextProperty); }
             set { SetValue(SiteContextProperty, value); }
         }
 
@@ -64,11 +65,10 @@ namespace MarkPad.Document.Controls
 
         void SiteItemOnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var textBlock = (TextBlock)sender;
-            var siteItem = (SiteItemBase)textBlock.DataContext;
+            var textBlock = (TextBlock) sender;
+            var siteItem = (SiteItemBase) textBlock.DataContext;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-
                 if (siteItem.Selected && selectedTime != null &&
                     DateTime.Now.Subtract(selectedTime.Value).TotalMilliseconds > 500)
                 {
@@ -95,18 +95,20 @@ namespace MarkPad.Document.Controls
                 treeViewItem.IsSelected = true;
 
                 const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
-                var selectMethod = typeof(TreeViewItem).GetMethod("Select", bindingFlags);
+                var selectMethod = typeof (TreeViewItem).GetMethod("Select", bindingFlags);
 
-                selectMethod.Invoke(treeViewItem, new object[] { isSelected });
+                selectMethod.Invoke(treeViewItem, new object[] {isSelected});
             }
-            catch { }
+            catch
+            {
+            }
         }
 
 
         void EditBoxKeyDown(object sender, KeyEventArgs e)
         {
-            var textBlock = (TextBox)sender;
-            var siteItem = (SiteItemBase)textBlock.DataContext;
+            var textBlock = (TextBox) sender;
+            var siteItem = (SiteItemBase) textBlock.DataContext;
 
             if (siteItem.IsRenaming)
             {
@@ -123,12 +125,12 @@ namespace MarkPad.Document.Controls
             }
         }
 
-        private void SiteFilesSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        void SiteFilesSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (currentlySelectedItem != null)
                 currentlySelectedItem.Selected = false;
 
-            var siteItem = (SiteItemBase)e.NewValue;
+            var siteItem = (SiteItemBase) e.NewValue;
 
             if (siteItem == null)
             {
@@ -142,7 +144,7 @@ namespace MarkPad.Document.Controls
             selectedTime = DateTime.Now;
         }
 
-        private void SiteFilesKeyDown(object sender, KeyEventArgs e)
+        void SiteFilesKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.F2 && currentlySelectedItem != null && !currentlySelectedItem.IsRenaming)
             {

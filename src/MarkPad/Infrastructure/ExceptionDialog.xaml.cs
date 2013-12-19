@@ -8,15 +8,15 @@ namespace MarkPad.Infrastructure
 {
     public partial class ExceptionDialog
     {
-        private string details;
-        private string message;
+        string details;
+        string message;
 
         public ExceptionDialog()
         {
             InitializeComponent();
         }
 
-        private void DragMoveWindow(object sender, MouseButtonEventArgs e)
+        void DragMoveWindow(object sender, MouseButtonEventArgs e)
         {
             if (e.RightButton != MouseButtonState.Pressed && e.MiddleButton != MouseButtonState.Pressed)
                 DragMove();
@@ -45,23 +45,24 @@ namespace MarkPad.Infrastructure
 
         public Exception Exception { get; set; }
 
-        private void TryClose(object sender, RoutedEventArgs e)
+        void TryClose(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        private void CopyToClipboard(object sender, RoutedEventArgs e)
+        void CopyToClipboard(object sender, RoutedEventArgs e)
         {
             SetData(DataFormats.Text, Details);
         }
 
         // Implementation taken from the WinForms clipboard class.
         // Seriously, the clipboard can fail, so it retries 10 times.
-        private void SetData(string format, object data)
+        void SetData(string format, object data)
         {
             if (!data.GetType().IsSerializable)
             {
-                throw new NotSupportedException("An object being added to the clipboard must be serializable. Ensure that the entire object tree is serializable.");
+                throw new NotSupportedException(
+                    "An object being added to the clipboard must be serializable. Ensure that the entire object tree is serializable.");
             }
 
             bool succeeded = false;

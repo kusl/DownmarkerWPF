@@ -7,7 +7,7 @@ namespace MarkPad.DocumentSources.MetaWeblog
 {
     public class PublishDetailsViewModel : Screen
     {
-        private readonly Details post;
+        readonly Details post;
 
         public PublishDetailsViewModel(Details post, List<BlogSetting> blogs)
         {
@@ -27,10 +27,7 @@ namespace MarkPad.DocumentSources.MetaWeblog
 
         public string Categories
         {
-            get
-            {
-                return post.Categories == null ? "" : string.Join(",", post.Categories);
-            }
+            get { return post.Categories == null ? "" : string.Join(",", post.Categories); }
             set { post.Categories = value.Split(','); }
         }
 

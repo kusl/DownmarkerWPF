@@ -49,7 +49,7 @@ namespace MarkPad.Infrastructure
                     settings.RecentFiles.RemoveAt(index);
                 settings.RecentFiles.Insert(0, openedFile);
                 settingsService.SaveSettings(settings);
-                
+
                 // Sometimes the settings and the jumplist can get out of sequence.
                 index = currentFiles.IndexOf(openedFile);
 
@@ -62,7 +62,7 @@ namespace MarkPad.Infrastructure
                 var settings = settingsService.GetSettings<MarkPadSettings>();
 
                 settings.RecentFiles.Insert(0, openedFile);
-                if (settings.RecentFiles.Count > 5) 
+                if (settings.RecentFiles.Count > 5)
                     settings.RecentFiles.RemoveAt(5);
                 settingsService.SaveSettings(settings);
 
@@ -70,7 +70,7 @@ namespace MarkPad.Infrastructure
             }
         }
 
-        private void InsertFileFirst(string openedFile)
+        void InsertFileFirst(string openedFile)
         {
             if (!IsWin7OrAbove())
                 return;
@@ -90,7 +90,10 @@ namespace MarkPad.Infrastructure
 
             jumpList = GetJumpList();
 
-            var x = new Thread(new ParameterizedThreadStart(delegate { PopulateJumpList(settingsService.GetSettings<MarkPadSettings>().RecentFiles); }));
+            var x =
+                new Thread(
+                    new ParameterizedThreadStart(
+                        delegate { PopulateJumpList(settingsService.GetSettings<MarkPadSettings>().RecentFiles); }));
             x.SetApartmentState(ApartmentState.STA);
             x.Start();
         }
@@ -100,7 +103,7 @@ namespace MarkPad.Infrastructure
             //settingsService.Save();
         }
 
-        private void PopulateJumpList(IEnumerable<string> recentFiles)
+        void PopulateJumpList(IEnumerable<string> recentFiles)
         {
             if (!IsWin7OrAbove())
                 return;
@@ -117,23 +120,23 @@ namespace MarkPad.Infrastructure
             jumpList.Apply();
         }
 
-        private static JumpItem CreateJumpListItem(string file)
+        static JumpItem CreateJumpListItem(string file)
         {
             if (!IsWin7OrAbove())
                 return null;
 
             var path = Assembly.GetEntryAssembly().CodeBase;
             return new JumpTask
-                           {
-                               Arguments = file,
-                               ApplicationPath = path,
-                               IconResourcePath = Path.Combine(Constants.IconDir, Constants.Icons[0]),
-                               Title = new FileInfo(file).Name,
-                               CustomCategory = "Recent Files"
-                           };
+            {
+                Arguments = file,
+                ApplicationPath = path,
+                IconResourcePath = Path.Combine(Constants.IconDir, Constants.Icons[0]),
+                Title = new FileInfo(file).Name,
+                CustomCategory = "Recent Files"
+            };
         }
 
-        private static bool IsWin7OrAbove()
+        static bool IsWin7OrAbove()
         {
             // check for Windows7
             var os = Environment.OSVersion.Version;
@@ -143,7 +146,7 @@ namespace MarkPad.Infrastructure
             return true;
         }
 
-        private static JumpList GetJumpList()
+        static JumpList GetJumpList()
         {
             if (!IsWin7OrAbove())
                 return null;
@@ -151,7 +154,7 @@ namespace MarkPad.Infrastructure
             var list = JumpList.GetJumpList(Application.Current);
             if (list != null) return list;
 
-            list = new JumpList { ShowFrequentCategory = false, ShowRecentCategory = false };
+            list = new JumpList {ShowFrequentCategory = false, ShowRecentCategory = false};
 
             JumpList.SetJumpList(Application.Current, list);
             return list;

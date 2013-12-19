@@ -26,7 +26,7 @@ using System.Windows.Threading;
 
 namespace MarkPad.Infrastructure
 {
-    internal enum WM
+    enum WM
     {
         NULL = 0x0000,
         CREATE = 0x0001,
@@ -131,8 +131,10 @@ namespace MarkPad.Infrastructure
         DWMWINDOWMAXIMIZEDCHANGE = 0x0321,
 
         #region Windows 7
+
         DWMSENDICONICTHUMBNAIL = 0x0323,
         DWMSENDICONICLIVEPREVIEWBITMAP = 0x0326,
+
         #endregion
 
         USER = 0x0400,
@@ -144,7 +146,7 @@ namespace MarkPad.Infrastructure
     }
 
     [SuppressUnmanagedCodeSecurity]
-    internal static class NativeMethods
+    static class NativeMethods
     {
         /// <summary>
         /// Delegate declaration that matches WndProc signatures.
@@ -152,11 +154,11 @@ namespace MarkPad.Infrastructure
         public delegate IntPtr MessageHandler(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled);
 
         [DllImport("shell32.dll", EntryPoint = "CommandLineToArgvW", CharSet = CharSet.Unicode)]
-        private static extern IntPtr _CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine, out int numArgs);
+        static extern IntPtr _CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine, out int numArgs);
 
 
         [DllImport("kernel32.dll", EntryPoint = "LocalFree", SetLastError = true)]
-        private static extern IntPtr _LocalFree(IntPtr hMem);
+        static extern IntPtr _LocalFree(IntPtr hMem);
 
 
         public static string[] CommandLineToArgvW(string cmdLine)
@@ -175,7 +177,7 @@ namespace MarkPad.Infrastructure
 
                 for (int i = 0; i < numArgs; i++)
                 {
-                    IntPtr currArg = Marshal.ReadIntPtr(argv, i * Marshal.SizeOf(typeof(IntPtr)));
+                    IntPtr currArg = Marshal.ReadIntPtr(argv, i*Marshal.SizeOf(typeof (IntPtr)));
                     result[i] = Marshal.PtrToStringUni(currArg);
                 }
 
@@ -183,13 +185,11 @@ namespace MarkPad.Infrastructure
             }
             finally
             {
-
                 IntPtr p = _LocalFree(argv);
                 // Otherwise LocalFree failed.
                 // Assert.AreEqual(IntPtr.Zero, p);
             }
         }
-
     }
 
     public interface ISingleInstanceApp
@@ -209,44 +209,44 @@ namespace MarkPad.Infrastructure
     /// For most apps, this will not be much of an issue.
     /// </remarks>
     public static class SingleInstance<TApplication>
-                where TApplication : Application, ISingleInstanceApp
+        where TApplication : Application, ISingleInstanceApp
     {
         #region Private Fields
 
         /// <summary>
         /// String delimiter used in channel names.
         /// </summary>
-        private const string Delimiter = ":";
+        const string Delimiter = ":";
 
         /// <summary>
         /// Suffix to the channel name.
         /// </summary>
-        private const string ChannelNameSuffix = "SingeInstanceIPCChannel";
+        const string ChannelNameSuffix = "SingeInstanceIPCChannel";
 
         /// <summary>
         /// Remote service name.
         /// </summary>
-        private const string RemoteServiceName = "SingleInstanceApplicationService";
+        const string RemoteServiceName = "SingleInstanceApplicationService";
 
         /// <summary>
         /// IPC protocol used (string).
         /// </summary>
-        private const string IpcProtocol = "ipc://";
+        const string IpcProtocol = "ipc://";
 
         /// <summary>
         /// Application mutex.
         /// </summary>
-        private static Mutex singleInstanceMutex;
+        static Mutex singleInstanceMutex;
 
         /// <summary>
         /// IPC channel for communications.
         /// </summary>
-        private static IpcServerChannel channel;
+        static IpcServerChannel channel;
 
         /// <summary>
         /// List of command line arguments for the application.
         /// </summary>
-        private static IList<string> commandLineArgs;
+        static IList<string> commandLineArgs;
 
         #endregion
 
@@ -319,7 +319,7 @@ namespace MarkPad.Infrastructure
         /// Gets command line args - for ClickOnce deployed applications, command line args may not be passed directly, they have to be retrieved.
         /// </summary>
         /// <returns>List of command line arg strings.</returns>
-        private static IList<string> GetCommandLineArgs(string uniqueApplicationName)
+        static IList<string> GetCommandLineArgs(string uniqueApplicationName)
         {
             string[] args = null;
             if (AppDomain.CurrentDomain.ActivationContext == null)
@@ -357,7 +357,7 @@ namespace MarkPad.Infrastructure
 
             if (args == null)
             {
-                args = new string[] { };
+                args = new string[] {};
             }
 
             return new List<string>(args);
@@ -367,7 +367,7 @@ namespace MarkPad.Infrastructure
         /// Creates a remote service for communication.
         /// </summary>
         /// <param name="channelName">Application's IPC channel name.</param>
-        private static void CreateRemoteService(string channelName)
+        static void CreateRemoteService(string channelName)
         {
             BinaryServerFormatterSinkProvider serverProvider = new BinaryServerFormatterSinkProvider();
             serverProvider.TypeFilterLevel = TypeFilterLevel.Full;
@@ -397,7 +397,7 @@ namespace MarkPad.Infrastructure
         /// <param name="args">
         /// Command line arguments for the second instance, passed to the first instance to take appropriate action.
         /// </param>
-        private static void SignalFirstInstance(string channelName, IList<string> args)
+        static void SignalFirstInstance(string channelName, IList<string> args)
         {
             IpcClientChannel secondInstanceChannel = new IpcClientChannel();
             ChannelServices.RegisterChannel(secondInstanceChannel, true);
@@ -405,7 +405,8 @@ namespace MarkPad.Infrastructure
             string remotingServiceUrl = IpcProtocol + channelName + "/" + RemoteServiceName;
 
             // Obtain a reference to the remoting service exposed by the server i.e the first instance of the application
-            IPCRemoteService firstInstanceRemoteServiceReference = (IPCRemoteService)RemotingServices.Connect(typeof(IPCRemoteService), remotingServiceUrl);
+            IPCRemoteService firstInstanceRemoteServiceReference =
+                (IPCRemoteService) RemotingServices.Connect(typeof (IPCRemoteService), remotingServiceUrl);
 
             // Check that the remote service exists, in some cases the first instance may not yet have created one, in which case
             // the second instance should just exit
@@ -422,7 +423,7 @@ namespace MarkPad.Infrastructure
         /// </summary>
         /// <param name="arg">Callback argument.</param>
         /// <returns>Always null.</returns>
-        private static object ActivateFirstInstanceCallback(object arg)
+        static object ActivateFirstInstanceCallback(object arg)
         {
             // Get command line args to be passed to first instance
             IList<string> args = arg as IList<string>;
@@ -434,7 +435,7 @@ namespace MarkPad.Infrastructure
         /// Activates the first instance of the application with arguments from a second instance.
         /// </summary>
         /// <param name="args">List of arguments to supply the first instance of the application.</param>
-        private static void ActivateFirstInstance(IList<string> args)
+        static void ActivateFirstInstance(IList<string> args)
         {
             // Set main window state and process command line args
             if (Application.Current == null)
@@ -442,7 +443,7 @@ namespace MarkPad.Infrastructure
                 return;
             }
 
-            ((TApplication)Application.Current).SignalExternalCommandLineArgs(args);
+            ((TApplication) Application.Current).SignalExternalCommandLineArgs(args);
         }
 
         #endregion
@@ -453,7 +454,7 @@ namespace MarkPad.Infrastructure
         /// Remoting service class which is exposed by the server i.e the first instance and called by the second instance
         /// to pass on the command line arguments to the first instance and cause it to activate itself.
         /// </summary>
-        private class IPCRemoteService : MarshalByRefObject
+        class IPCRemoteService : MarshalByRefObject
         {
             /// <summary>
             /// Activates the first instance of the application.
@@ -465,7 +466,9 @@ namespace MarkPad.Infrastructure
                 {
                     // Do an asynchronous call to ActivateFirstInstance function
                     Application.Current.Dispatcher.BeginInvoke(
-                        DispatcherPriority.Normal, new DispatcherOperationCallback(SingleInstance<TApplication>.ActivateFirstInstanceCallback), args);
+                        DispatcherPriority.Normal,
+                        new DispatcherOperationCallback(SingleInstance<TApplication>.ActivateFirstInstanceCallback),
+                        args);
                 }
             }
 

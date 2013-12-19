@@ -20,7 +20,8 @@ namespace MarkPad.Document.EditorBehaviours
         {
             if (!e.ViewModel.Overtype) return;
             if (!e.Editor.TextArea.Selection.IsEmpty) return;
-            if (e.Editor.Document.GetLineByNumber(e.Editor.TextArea.Caret.Line).EndOffset == e.Editor.CaretOffset) return;
+            if (e.Editor.Document.GetLineByNumber(e.Editor.TextArea.Caret.Line).EndOffset == e.Editor.CaretOffset)
+                return;
             if (e.Args.Text.StartsWith("\r") || e.Args.Text.StartsWith("\n")) return;
 
             e.Editor.SelectionLength = 1;

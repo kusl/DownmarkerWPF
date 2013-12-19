@@ -9,9 +9,9 @@ namespace MarkPad.Infrastructure
     /// <typeparam name="T"></typeparam>
     public class DelegateCommand<T> : ICommand
     {
-        private readonly Func<T, bool> canExecuteMethod;
-        private readonly Action<T> executeMethod;
-        private bool isExecuting;
+        readonly Func<T, bool> canExecuteMethod;
+        readonly Action<T> executeMethod;
+        bool isExecuting;
 
         public DelegateCommand(Action<T> executeMethod)
             : this(executeMethod, null)
@@ -30,14 +30,8 @@ namespace MarkPad.Infrastructure
 
         public event EventHandler CanExecuteChanged
         {
-            add
-            {
-                CommandManager.RequerySuggested += value;
-            }
-            remove
-            {
-                CommandManager.RequerySuggested -= value;
-            }
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
         }
 
         public void RaiseCanExecuteChanged()
@@ -47,7 +41,7 @@ namespace MarkPad.Infrastructure
 
         bool ICommand.CanExecute(object parameter)
         {
-            return !isExecuting && CanExecute((T)parameter);
+            return !isExecuting && CanExecute((T) parameter);
         }
 
         void ICommand.Execute(object parameter)
@@ -56,7 +50,7 @@ namespace MarkPad.Infrastructure
             try
             {
                 RaiseCanExecuteChanged();
-                Execute((T)parameter);
+                Execute((T) parameter);
             }
             finally
             {

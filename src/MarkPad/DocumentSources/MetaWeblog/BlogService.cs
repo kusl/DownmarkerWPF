@@ -22,8 +22,8 @@ namespace MarkPad.DocumentSources.MetaWeblog
 
         public BlogService(
             IDialogService dialogService,
-            IWindowManager windowManager, 
-            Func<BlogSettingsViewModel> blogSettingsCreator, 
+            IWindowManager windowManager,
+            Func<BlogSettingsViewModel> blogSettingsCreator,
             ISettingsProvider settingsProvider)
         {
             this.dialogService = dialogService;
@@ -52,7 +52,7 @@ namespace MarkPad.DocumentSources.MetaWeblog
 
         public BlogSetting AddBlog()
         {
-            var blog = new BlogSetting { BlogName = "New", Language = "HTML" };
+            var blog = new BlogSetting {BlogName = "New", Language = "HTML"};
 
             blog.BeginEdit();
 
@@ -111,7 +111,7 @@ namespace MarkPad.DocumentSources.MetaWeblog
         static bool SameBlog(BlogSetting b1, BlogSetting b2)
         {
             return b2.BlogInfo.blogName == b1.BlogInfo.blogName && b2.BlogInfo.blogid == b1.BlogInfo.blogid
-                && b2.BlogName == b1.BlogName && b2.WebAPI == b1.WebAPI;
+                   && b2.BlogName == b1.BlogName && b2.WebAPI == b1.WebAPI;
         }
 
         public List<BlogSetting> GetBlogs()
@@ -121,7 +121,9 @@ namespace MarkPad.DocumentSources.MetaWeblog
                 return new List<BlogSetting>();
 
             var serializer = new DataContractJsonSerializer(typeof (List<BlogSetting>));
-            return (List<BlogSetting>)serializer.ReadObject(new MemoryStream(Encoding.Default.GetBytes(settings.BlogsJson)));
+            return
+                (List<BlogSetting>)
+                    serializer.ReadObject(new MemoryStream(Encoding.Default.GetBytes(settings.BlogsJson)));
         }
 
         void SaveBlogs(List<BlogSetting> blogs)
@@ -129,7 +131,7 @@ namespace MarkPad.DocumentSources.MetaWeblog
             var settings = settingsProvider.GetSettings<MarkPadSettings>();
             var ms = new MemoryStream();
             var writer = JsonReaderWriterFactory.CreateJsonWriter(ms);
-            new DataContractJsonSerializer(typeof(List<BlogSetting>)).WriteObject(ms, blogs);
+            new DataContractJsonSerializer(typeof (List<BlogSetting>)).WriteObject(ms, blogs);
             writer.Flush();
             settings.BlogsJson = Encoding.Default.GetString(ms.ToArray());
             settingsProvider.SaveSettings(settings);

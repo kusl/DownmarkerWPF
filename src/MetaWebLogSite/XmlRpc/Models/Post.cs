@@ -2,6 +2,7 @@ using System;
 using CookComputing.XmlRpc;
 
 // ReSharper disable InconsistentNaming
+
 namespace MetaWebLogSite.XmlRpc.Models
 {
     [XmlRpcMissingMapping(MappingAction.Ignore)]
@@ -18,4 +19,5 @@ namespace MetaWebLogSite.XmlRpc.Models
         public string format;
     }
 }
+
 // ReSharper restore InconsistentNaming

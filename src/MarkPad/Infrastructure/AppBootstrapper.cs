@@ -38,7 +38,7 @@ namespace MarkPad.Infrastructure
         {
             builder.RegisterModule<ServicesModule>();
             builder.RegisterType<JumpListIntegration>().SingleInstance();
-			builder.RegisterModule<MarkPadAutofacModule>();
+            builder.RegisterModule<MarkPadAutofacModule>();
             builder.RegisterType<ShellViewModel>().AsSelf().As<IShell>().SingleInstance();
         }
 
@@ -69,13 +69,13 @@ namespace MarkPad.Infrastructure
             // Handle the original arguments from the first run of this app.
             var activationArguments = AppDomain.CurrentDomain.SetupInformation.ActivationArguments;
             if (activationArguments == null || activationArguments.ActivationData == null)
-                ((App)Application).HandleArguments(Environment.GetCommandLineArgs());
+                ((App) Application).HandleArguments(Environment.GetCommandLineArgs());
             else
             {
-                ((App)Application).HandleArguments(activationArguments.ActivationData);
+                ((App) Application).HandleArguments(activationArguments.ActivationData);
             }
         }
-                
+
         protected override void OnExit(object sender, EventArgs e)
         {
             jumpList.Dispose();
@@ -97,15 +97,15 @@ namespace MarkPad.Infrastructure
             e.Handled = true;
         }
 
-        private void SetAwesomiumDefaults()
+        void SetAwesomiumDefaults()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)
-                ?? Directory.GetCurrentDirectory();
+                                ?? Directory.GetCurrentDirectory();
 
             HtmlPreview.BaseDirectory = Path.Combine(directoryName, "Themes");
         }
 
-        private void DumpIconsForDocuments()
+        void DumpIconsForDocuments()
         {
             var assemblyName = Assembly.GetEntryAssembly().GetName();
 
@@ -118,25 +118,27 @@ namespace MarkPad.Infrastructure
                     continue;
 
                 var executingAssembly = Assembly.GetExecutingAssembly();
-                using (Stream stm = executingAssembly.GetManifestResourceStream(String.Format("{0}.{1}", assemblyName.Name, file)))
+                using (
+                    Stream stm =
+                        executingAssembly.GetManifestResourceStream(String.Format("{0}.{1}", assemblyName.Name, file)))
                 using (Stream outFile = File.Create(Path.Combine(Constants.IconDir, file)))
                 {
-                    if (stm != null) 
+                    if (stm != null)
                         stm.CopyTo(outFile);
                 }
             }
         }
 
-        private void ExtendCaliburn()
+        void ExtendCaliburn()
         {
             MessageBinder.SpecialValues.Add("$filenames", context =>
             {
                 var args = context.EventArgs as DragEventArgs;
 
-                if (args == null || !args.Data.GetDataPresent(DataFormats.FileDrop)) 
+                if (args == null || !args.Data.GetDataPresent(DataFormats.FileDrop))
                     return null;
-                
-                return (string[])args.Data.GetData(DataFormats.FileDrop);
+
+                return (string[]) args.Data.GetData(DataFormats.FileDrop);
             });
         }
 
@@ -145,7 +147,7 @@ namespace MarkPad.Infrastructure
             return Container.Resolve<IEventAggregator>();
         }
 
-        private static void ShowDialog(Exception e)
+        static void ShowDialog(Exception e)
         {
             Exception inner = e;
             while (inner.InnerException != null)
@@ -155,8 +157,8 @@ namespace MarkPad.Infrastructure
 
             var dialog = new ExceptionDialog
             {
-                Message = inner.Message, 
-                Details = ExceptionBuilder.ExceptionToString(e), 
+                Message = inner.Message,
+                Details = ExceptionBuilder.ExceptionToString(e),
                 Exception = e
             };
             dialog.ShowDialog();

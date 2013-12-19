@@ -29,10 +29,10 @@ namespace MarkPad.DocumentSources.MetaWeblog.Service.Rsd
 
         public static DiscoveryResult Failed(string failedMessage)
         {
-            return new DiscoveryResult((Exception)null)
-                       {
-                           FailMessage = failedMessage
-                       };
+            return new DiscoveryResult((Exception) null)
+            {
+                FailMessage = failedMessage
+            };
         }
     }
 }

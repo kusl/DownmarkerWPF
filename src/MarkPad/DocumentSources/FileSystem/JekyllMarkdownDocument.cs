@@ -14,16 +14,22 @@ namespace MarkPad.DocumentSources.FileSystem
         readonly JekyllSiteContext siteContext;
 
         public JekyllMarkdownDocument(
-            string path, string markdownContent, JekyllSiteContext siteContext,  IEnumerable<FileReference> associatedFiles,
-            IDocumentFactory documentFactory, IEventAggregator eventAggregator, IDialogService dialogService, IFileSystem fileSystem)
-            : base(path, markdownContent, siteContext, associatedFiles, documentFactory, eventAggregator, dialogService, fileSystem)
+            string path, string markdownContent, JekyllSiteContext siteContext,
+            IEnumerable<FileReference> associatedFiles,
+            IDocumentFactory documentFactory, IEventAggregator eventAggregator, IDialogService dialogService,
+            IFileSystem fileSystem)
+            : base(
+                path, markdownContent, siteContext, associatedFiles, documentFactory, eventAggregator, dialogService,
+                fileSystem)
         {
             this.siteContext = siteContext;
         }
 
         public override FileReference SaveImage(Bitmap image)
         {
-            var pathToFile = Path.GetDirectoryName(FileName).Replace(siteContext.SiteBasePath, string.Empty).Trim('\\', '/');
+            var pathToFile = Path.GetDirectoryName(FileName)
+                .Replace(siteContext.SiteBasePath, string.Empty)
+                .Trim('\\', '/');
             if (pathToFile.StartsWith("_")) pathToFile = string.Empty;
             var directory = Path.Combine(siteContext.SiteBasePath, "img", pathToFile);
             var imageFileName = GetFileNameBasedOnTitle(Title, directory);

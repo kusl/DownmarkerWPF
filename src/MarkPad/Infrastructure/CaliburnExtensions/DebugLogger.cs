@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace MarkPad.Infrastructure.CaliburnExtensions
 {
-    internal class DebugLogger : Caliburn.Micro.ILog
+    class DebugLogger : Caliburn.Micro.ILog
     {
-        private readonly string typeName;
+        readonly string typeName;
 
         public DebugLogger(Type type)
         {

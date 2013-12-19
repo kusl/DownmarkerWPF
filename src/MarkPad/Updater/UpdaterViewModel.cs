@@ -29,13 +29,15 @@ namespace MarkPad.Updater
                     updateDownloading.Dispose();
                     Background = false;
                 });
-                ApplicationDeployment.CurrentDeployment.UpdateProgressChanged += (sender, args) => Execute.OnUIThread(() =>
-                {
-                    Progress = args.ProgressPercentage;
-                    updateDownloading = asyncWork.UpdateMessage(string.Format(
-                        "Downloading update - {1:D}k of {2:D}k ({0}%)", args.ProgressPercentage, args.BytesCompleted / 1024, args.BytesTotal / 1024),
-                        updateDownloading);
-                });
+                ApplicationDeployment.CurrentDeployment.UpdateProgressChanged +=
+                    (sender, args) => Execute.OnUIThread(() =>
+                    {
+                        Progress = args.ProgressPercentage;
+                        updateDownloading = asyncWork.UpdateMessage(string.Format(
+                            "Downloading update - {1:D}k of {2:D}k ({0}%)", args.ProgressPercentage,
+                            args.BytesCompleted/1024, args.BytesTotal/1024),
+                            updateDownloading);
+                    });
 
                 UpdateState = UpdateState.Downloading;
                 Background = false;
@@ -45,7 +47,7 @@ namespace MarkPad.Updater
             else if (UpdateState == UpdateState.Unchecked)
             {
                 Background = true;
-                CheckForUpdatesInBackground();                
+                CheckForUpdatesInBackground();
             }
         }
 

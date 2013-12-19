@@ -17,7 +17,7 @@ namespace MarkPad.Settings
 
     public class MarkpadRegistryEditor : IMarkpadRegistryEditor
     {
-        private const string MarkpadKeyName = "markpad.md";
+        const string MarkpadKeyName = "markpad.md";
 
         public void UpdateExtensionRegistryKeys(IEnumerable<ExtensionViewModel> extensions)
         {
@@ -93,21 +93,20 @@ namespace MarkPad.Settings
                     if (key != null)
                     {
                         extensions = Constants.DefaultExtensions
-                                              .Select(s =>
-                                              {
-
-                                                  var openSubKey = key.OpenSubKey(s);
-                                                  return new ExtensionViewModel(s, Enabled(s, key, openSubKey));
-                                              })
-                                              .Where(e => e != null)
-                                              .ToArray();
+                            .Select(s =>
+                            {
+                                var openSubKey = key.OpenSubKey(s);
+                                return new ExtensionViewModel(s, Enabled(s, key, openSubKey));
+                            })
+                            .Where(e => e != null)
+                            .ToArray();
                     }
                 }
             }
             return extensions;
         }
 
-        private bool Enabled(string s, RegistryKey key, RegistryKey openSubKey)
+        bool Enabled(string s, RegistryKey key, RegistryKey openSubKey)
         {
             var defaultNameValue = openSubKey == null ? null : openSubKey.GetValue(null);
             var defaultNameValueAsString = defaultNameValue == null ? null : defaultNameValue.ToString();

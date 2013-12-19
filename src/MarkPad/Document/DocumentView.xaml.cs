@@ -23,32 +23,38 @@ namespace MarkPad.Document
         readonly ISettingsProvider settingsProvider;
 
         #region public double ScrollPercentage
-        public static DependencyProperty ScrollPercentageProperty = DependencyProperty.Register("ScrollPercentage", typeof(double), typeof(DocumentView),
+
+        public static DependencyProperty ScrollPercentageProperty = DependencyProperty.Register("ScrollPercentage",
+            typeof (double), typeof (DocumentView),
             new PropertyMetadata(default(double)));
 
         public double ScrollPercentage
         {
-            get { return (double)GetValue(ScrollPercentageProperty); }
+            get { return (double) GetValue(ScrollPercentageProperty); }
             set { SetValue(ScrollPercentageProperty, value); }
         }
+
         #endregion
 
         public DocumentView(
-			ISettingsProvider settingsProvider)
+            ISettingsProvider settingsProvider)
         {
-			this.settingsProvider = settingsProvider;
-			
+            this.settingsProvider = settingsProvider;
+
             InitializeComponent();
 
             Loaded += DocumentViewLoaded;
             SizeChanged += DocumentViewSizeChanged;
             markdownEditor.Editor.MouseWheel += HandleEditorMouseWheel;
 
-			Handle(new SettingsChangedEvent());
+            Handle(new SettingsChangedEvent());
 
-            CommandBindings.Add(new CommandBinding(DisplayCommands.ZoomIn, (x, y) => ViewModel.ExecuteSafely(vm=>vm.ZoomIn())));
-            CommandBindings.Add(new CommandBinding(DisplayCommands.ZoomOut, (x, y) => ViewModel.ExecuteSafely(vm=>vm.ZoomOut())));
-            CommandBindings.Add(new CommandBinding(DisplayCommands.ZoomReset, (x, y) => ViewModel.ExecuteSafely(vm=>vm.ZoomReset())));
+            CommandBindings.Add(new CommandBinding(DisplayCommands.ZoomIn,
+                (x, y) => ViewModel.ExecuteSafely(vm => vm.ZoomIn())));
+            CommandBindings.Add(new CommandBinding(DisplayCommands.ZoomOut,
+                (x, y) => ViewModel.ExecuteSafely(vm => vm.ZoomOut())));
+            CommandBindings.Add(new CommandBinding(DisplayCommands.ZoomReset,
+                (x, y) => ViewModel.ExecuteSafely(vm => vm.ZoomReset())));
         }
 
         public TextView TextView
@@ -61,7 +67,7 @@ namespace MarkPad.Document
             get { return Editor.Document; }
         }
 
-        private DocumentViewModel ViewModel
+        DocumentViewModel ViewModel
         {
             get { return DataContext as DocumentViewModel; }
         }
@@ -86,12 +92,12 @@ namespace MarkPad.Document
             e.Handled = true;
 
             if (e.Delta > 0)
-                ViewModel.ExecuteSafely(vm=>vm.ZoomIn());
-            else 
-                ViewModel.ExecuteSafely(vm=>vm.ZoomOut());
+                ViewModel.ExecuteSafely(vm => vm.ZoomIn());
+            else
+                ViewModel.ExecuteSafely(vm => vm.ZoomOut());
         }
 
-        private void ApplyFont()
+        void ApplyFont()
         {
             markdownEditor.Editor.FontFamily = GetFontFamily();
         }
@@ -102,7 +108,7 @@ namespace MarkPad.Document
             webBrowserColumn.MaxWidth = e.NewSize.Width <= 350 ? 0 : double.MaxValue;
         }
 
-        private FontFamily GetFontFamily()
+        FontFamily GetFontFamily()
         {
             var configuredSource = settings.FontFamily;
             var fontFamily = FontHelpers.TryGetFontFamilyFromStack(configuredSource, "Segoe UI", "Arial");
@@ -110,7 +116,7 @@ namespace MarkPad.Document
             return fontFamily;
         }
 
-        private void DocumentViewLoaded(object sender, RoutedEventArgs e)
+        void DocumentViewLoaded(object sender, RoutedEventArgs e)
         {
             documentScrollViewer = markdownEditor.FindVisualChild<ScrollViewer>();
 
@@ -120,9 +126,10 @@ namespace MarkPad.Document
             }
         }
 
-        private void DocumentScrollViewerOnScrollChanged(object sender, ScrollChangedEventArgs scrollChangedEventArgs)
+        void DocumentScrollViewerOnScrollChanged(object sender, ScrollChangedEventArgs scrollChangedEventArgs)
         {
-            ScrollPercentage = documentScrollViewer.VerticalOffset / (documentScrollViewer.ExtentHeight - documentScrollViewer.ViewportHeight);
+            ScrollPercentage = documentScrollViewer.VerticalOffset/
+                               (documentScrollViewer.ExtentHeight - documentScrollViewer.ViewportHeight);
         }
 
         public void Handle(SettingsChangedEvent message)
@@ -144,7 +151,8 @@ namespace MarkPad.Document
         }
 
         public static readonly DependencyProperty PreviewWidthProperty =
-            DependencyProperty.Register("PreviewWidth", typeof (double), typeof (DocumentView), new PropertyMetadata(default(double)));
+            DependencyProperty.Register("PreviewWidth", typeof (double), typeof (DocumentView),
+                new PropertyMetadata(default(double)));
 
         public double PreviewWidth
         {
@@ -153,7 +161,8 @@ namespace MarkPad.Document
         }
 
         public static readonly DependencyProperty PreviewHeightProperty =
-            DependencyProperty.Register("PreviewHeight", typeof (double), typeof (DocumentView), new PropertyMetadata(default(double)));
+            DependencyProperty.Register("PreviewHeight", typeof (double), typeof (DocumentView),
+                new PropertyMetadata(default(double)));
 
         public double PreviewHeight
         {

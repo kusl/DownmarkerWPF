@@ -336,7 +336,8 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="PrintDocument" Content="print" Style="{StaticResource OpenDocumentsOnly}" />
-                <Button x:Name="PublishDocument" Content="publish" Style="{StaticResource OpenDocumentsOnly}" Command="{Binding PublishDocumentCommand}" />
+                <Button x:Name="PublishDocument" Content="publish" Style="{StaticResource OpenDocumentsOnly}"
+                        Command="{Binding PublishDocumentCommand}" />
             </WrapPanel>
             <WrapPanel x:Name="NewItems" Margin="30,0,0,0" Opacity="0.995" VerticalAlignment="Bottom" Height="20" RenderTransformOrigin="0.5,0.5"
                        d:LayoutOverrides="VerticalAlignment, GridBox">
@@ -403,7 +404,8 @@
             </WrapPanel>
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Orientation="Horizontal">
                 <ContentControl x:Name="Updater" />
-                <Button Content="SETTINGS" Style="{DynamicResource ChromelessButtonStyle}" FontSize="10.667" FontWeight="Bold" AutomationProperties.AutomationId="MarkpadSettings">
+                <Button Content="SETTINGS" Style="{DynamicResource ChromelessButtonStyle}" FontSize="10.667" FontWeight="Bold"
+                        AutomationProperties.AutomationId="MarkpadSettings">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <cm:ActionMessage MethodName="ShowSettings" />
@@ -512,8 +514,9 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Name="SearchTextBox" Grid.Column="0" Text="{Binding SearchSettings.SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5,0,0,0" MinWidth="300" TextWrapping="Wrap" VerticalContentAlignment="Center">
+                        <TextBox Name="SearchTextBox" Grid.Column="0"
+                                 Text="{Binding SearchSettings.SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,0,0,0"
+                                 MinWidth="300" TextWrapping="Wrap" VerticalContentAlignment="Center">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TextChanged">
                                     <cm:ActionMessage MethodName="Search">
@@ -530,8 +533,9 @@
                                 </s:InputBindingTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
-                        <TextBox Name="ReplaceTextBox" Grid.Column="1" Text="{Binding SearchSettings.ReplaceTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5,0,0,0" MinWidth="300" TextWrapping="Wrap" VerticalContentAlignment="Center">
+                        <TextBox Name="ReplaceTextBox" Grid.Column="1"
+                                 Text="{Binding SearchSettings.ReplaceTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,0,0,0"
+                                 MinWidth="300" TextWrapping="Wrap" VerticalContentAlignment="Center">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TextChanged">
                                     <cm:ActionMessage MethodName="Search">

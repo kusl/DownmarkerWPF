@@ -15,11 +15,11 @@ namespace MarkPad.Document.Search
 
         public TextSegmentCollection<TextSegment> SearchHitsSegments { get; private set; }
 
-        private IEnumerable<Point> CreatePoints(Point start, Point end, double offset, int count)
+        IEnumerable<Point> CreatePoints(Point start, Point end, double offset, int count)
         {
             for (int i = 0; i < count; i++)
             {
-                yield return new Point(start.X + (double)i * offset, start.Y - (((i + 1) % 2 == 0) ? offset : 0.0));
+                yield return new Point(start.X + (double) i*offset, start.Y - (((i + 1)%2 == 0) ? offset : 0.0));
             }
             yield break;
         }
@@ -35,7 +35,7 @@ namespace MarkPad.Document.Search
                     Pen pen = new Pen(new SolidColorBrush(Colors.OrangeRed), 1);
                     pen.Freeze();
                     double num = 2.5;
-                    int count = System.Math.Max((int)((bottomRight.X - bottomLeft.X) / num) + 1, 4);
+                    int count = System.Math.Max((int) ((bottomRight.X - bottomLeft.X)/num) + 1, 4);
                     StreamGeometry streamGeometry = new StreamGeometry();
                     using (StreamGeometryContext streamGeometryContext = streamGeometry.Open())
                     {

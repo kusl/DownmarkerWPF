@@ -5,7 +5,7 @@ namespace MarkPad.DocumentSources.MetaWeblog
 {
     public partial class PublishDetailsView
     {
-        private readonly IDialogService dialogService;
+        readonly IDialogService dialogService;
 
         public PublishDetailsView(IDialogService dialogService)
         {
@@ -14,23 +14,24 @@ namespace MarkPad.DocumentSources.MetaWeblog
             InitializeComponent();
         }
 
-        private void ContinueClick(object sender, System.Windows.RoutedEventArgs e)
+        void ContinueClick(object sender, System.Windows.RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(PostTitle.Text))
             {
-                dialogService.ShowWarning("Error Publishing Post", "Post title needs to be entered before publishing.", "");
+                dialogService.ShowWarning("Error Publishing Post", "Post title needs to be entered before publishing.",
+                    "");
                 return;
             }
 
             DialogResult = true;
         }
 
-        private void CancelClick(object sender, System.Windows.RoutedEventArgs e)
+        void CancelClick(object sender, System.Windows.RoutedEventArgs e)
         {
             DialogResult = false;
         }
 
-        private void DragMoveWindow(object sender, MouseButtonEventArgs e)
+        void DragMoveWindow(object sender, MouseButtonEventArgs e)
         {
             if (e.RightButton != MouseButtonState.Pressed && e.MiddleButton != MouseButtonState.Pressed)
                 DragMove();

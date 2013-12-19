@@ -77,7 +77,6 @@ namespace MarkPad.Infrastructure.Abstractions
 
         /// <summary>
         /// Gets or sets the object used to marshal the event handler calls issued as a result of a directory change.
-
         /// Occurs when a file or directory in the specified <see cref="P:System.IO.FileSystemWatcher.Path"/> is changed.
         /// </summary>
         /// <filterpriority>2</filterpriority>

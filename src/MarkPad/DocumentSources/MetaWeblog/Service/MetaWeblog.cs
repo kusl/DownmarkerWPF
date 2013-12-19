@@ -1,4 +1,3 @@
-
 namespace MarkPad.DocumentSources.MetaWeblog.Service
 {
     public partial class MetaWeblog

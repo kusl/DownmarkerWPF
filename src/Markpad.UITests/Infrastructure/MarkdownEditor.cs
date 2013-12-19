@@ -19,12 +19,12 @@ namespace MarkPad.UITests.Infrastructure
         {
             get
             {
-                var valuePattern = (ValuePattern)EditorUIItem.AutomationElement.GetCurrentPattern(ValuePattern.Pattern);
+                var valuePattern = (ValuePattern) EditorUIItem.AutomationElement.GetCurrentPattern(ValuePattern.Pattern);
                 return valuePattern.Current.Value;
             }
             set
             {
-                var valuePattern = (ValuePattern)EditorUIItem.AutomationElement.GetCurrentPattern(ValuePattern.Pattern);
+                var valuePattern = (ValuePattern) EditorUIItem.AutomationElement.GetCurrentPattern(ValuePattern.Pattern);
                 valuePattern.SetValue(value);
             }
         }

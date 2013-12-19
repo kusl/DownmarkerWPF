@@ -63,7 +63,7 @@ namespace MetaWebLogSite.XmlRpc
             return dbContext.Categories.Select(c => new CategoryInfo
             {
                 description = c.Description,
-                categoryid = c.Id.ToString(), 
+                categoryid = c.Id.ToString(),
                 title = c.Title
             }).ToArray();
         }
@@ -118,12 +118,15 @@ namespace MetaWebLogSite.XmlRpc
         public BlogInfo[] GetUsersBlogs(string key, string username, string password)
         {
             Thread.Sleep(1000);
-            return new[] {new BlogInfo
+            return new[]
             {
-                blogid = "1", 
-                blogName = "Sample Blog", 
-                url = HttpContext.Current.Request.UserHostAddress
-            }};
+                new BlogInfo
+                {
+                    blogid = "1",
+                    blogName = "Sample Blog",
+                    url = HttpContext.Current.Request.UserHostAddress
+                }
+            };
         }
 
         [XmlRpcMethod("blogger.getUserInfo")]

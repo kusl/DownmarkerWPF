@@ -19,14 +19,14 @@ namespace MarkPad.Settings.UI
         public const string FontFamilySettingsKey = "FontFamily";
 
 
-        private readonly ISettingsProvider settingsProvider;
-        private readonly IEventAggregator eventAggregator;
-        private readonly Func<IPlugin, PluginViewModel> pluginViewModelCreator;
-        private readonly ISpellingService spellingService;
-        private readonly IList<IPlugin> plugins;
-        private readonly IBlogService blogService;
-        private readonly IMarkpadRegistryEditor markpadRegistryEditor;
-        private BlogSetting currentBlog;
+        readonly ISettingsProvider settingsProvider;
+        readonly IEventAggregator eventAggregator;
+        readonly Func<IPlugin, PluginViewModel> pluginViewModelCreator;
+        readonly ISpellingService spellingService;
+        readonly IList<IPlugin> plugins;
+        readonly IBlogService blogService;
+        readonly IMarkpadRegistryEditor markpadRegistryEditor;
+        BlogSetting currentBlog;
 
         public IEnumerable<ExtensionViewModel> Extensions { get; set; }
         public IEnumerable<FontSizes> FontSizes { get; set; }
@@ -41,9 +41,19 @@ namespace MarkPad.Settings.UI
         public IEnumerable<PluginViewModel> Plugins { get; private set; }
         public IndentType IndentType { get; set; }
         public bool EnableMarkdownExtra { get; set; }
-        public bool CanEditBlog { get { return currentBlog != null; } }
-        public bool CanRemoveBlog { get { return currentBlog != null; } }
+
+        public bool CanEditBlog
+        {
+            get { return currentBlog != null; }
+        }
+
+        public bool CanRemoveBlog
+        {
+            get { return currentBlog != null; }
+        }
+
         public bool IsColorsInverted { get; set; }
+
         public BlogSetting CurrentBlog
         {
             get { return currentBlog; }
@@ -57,10 +67,7 @@ namespace MarkPad.Settings.UI
 
         public int SelectedActualFontSize
         {
-            get
-            {
-                return Constants.FONT_SIZE_ENUM_ADJUSTMENT + (int)SelectedFontSize;
-            }
+            get { return Constants.FONT_SIZE_ENUM_ADJUSTMENT + (int) SelectedFontSize; }
         }
 
         public string EditorFontPreviewLabel
@@ -82,16 +89,16 @@ namespace MarkPad.Settings.UI
 
         public ObservableCollection<IndentType> IndentTypes
         {
-            get { return new ObservableCollection<IndentType> { IndentType.Tabs, IndentType.Spaces }; }
+            get { return new ObservableCollection<IndentType> {IndentType.Tabs, IndentType.Spaces}; }
         }
-        
+
 
         public SettingsViewModel(
             ISettingsProvider settingsProvider,
             IEventAggregator eventAggregator,
             Func<IPlugin, PluginViewModel> pluginViewModelCreator,
-            ISpellingService spellingService, 
-            IEnumerable<IPlugin> plugins, 
+            ISpellingService spellingService,
+            IEnumerable<IPlugin> plugins,
             IBlogService blogService,
             IMarkpadRegistryEditor markpadRegistryEditor)
         {
@@ -114,8 +121,8 @@ namespace MarkPad.Settings.UI
 
             Blogs = new ObservableCollection<BlogSetting>(blogs);
 
-            Languages = Enum.GetValues(typeof(SpellingLanguages)).OfType<SpellingLanguages>().ToArray();
-            FontSizes = Enum.GetValues(typeof(FontSizes)).OfType<FontSizes>().ToArray();
+            Languages = Enum.GetValues(typeof (SpellingLanguages)).OfType<SpellingLanguages>().ToArray();
+            FontSizes = Enum.GetValues(typeof (FontSizes)).OfType<FontSizes>().ToArray();
             FontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
 
             SelectedLanguage = settings.Language;
@@ -138,7 +145,7 @@ namespace MarkPad.Settings.UI
 
             EnableMarkdownExtra = settings.MarkdownExtraEnabled;
         }
-        
+
 
         public bool AddBlog()
         {
@@ -196,7 +203,7 @@ namespace MarkPad.Settings.UI
             Accept();
         }
 
-        private void UpdateMarkpadSettings()
+        void UpdateMarkpadSettings()
         {
             var settings = settingsProvider.GetSettings<MarkPadSettings>();
 

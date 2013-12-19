@@ -1,5 +1,4 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--ACCENT COLORS-->
     <Color x:Key="HighlightDarkColor">#FFbe0606</Color>
     <Color x:Key="HighlightLightColor">#FFbe0606</Color>
@@ -15,17 +14,12 @@
     <!--20%-->
     <Color x:Key="AccentColor4">#33ff3333</Color>
 
-    <LinearGradientBrush x:Key="BrandingBrush"
-                         EndPoint="0,0.5"
-                         StartPoint="1,0.5">
-        <GradientStop Color="{DynamicResource HighlightDarkColor}"
-                      Offset="0" />
-        <GradientStop Color="Blue"
-                      Offset="1" />
+    <LinearGradientBrush x:Key="BrandingBrush" EndPoint="0,0.5" StartPoint="1,0.5">
+        <GradientStop Color="{DynamicResource HighlightDarkColor}" Offset="0" />
+        <GradientStop Color="Blue" Offset="1" />
     </LinearGradientBrush>
 
-    <SolidColorBrush x:Key="AccentColorBrush"
-                     Color="{DynamicResource AccentColor}" />
+    <SolidColorBrush x:Key="AccentColorBrush" Color="{DynamicResource AccentColor}" />
 
     <!--Thumb Style-->
     <Style x:Key="HorizontalSliderThumb" TargetType="Thumb">
@@ -41,7 +35,8 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="DisabledVisualElement">
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity"
+                                                                       Storyboard.TargetName="DisabledVisualElement">
                                             <SplineDoubleKeyFrame KeyTime="0" Value=".55" />
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -51,7 +46,8 @@
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="DisabledVisualElement">
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity"
+                                                                       Storyboard.TargetName="DisabledVisualElement">
                                             <SplineDoubleKeyFrame KeyTime="0" Value=".55" />
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -62,12 +58,8 @@
                                 <VisualState x:Name="Unfocused" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border Background="White"
-                                BorderThickness="0,0,1,0"
-                                BorderBrush="{DynamicResource ControlBackgroundBrush}" />
-                        <Rectangle x:Name="DisabledVisualElement"
-                                   Fill="{DynamicResource DisabledWhiteColorBrush}"
-                                   IsHitTestVisible="false"
+                        <Border Background="White" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource ControlBackgroundBrush}" />
+                        <Rectangle x:Name="DisabledVisualElement" Fill="{DynamicResource DisabledWhiteColorBrush}" IsHitTestVisible="false"
                                    Opacity=".4" />
                     </Grid>
                 </ControlTemplate>
@@ -75,7 +67,7 @@
         </Setter>
     </Style>
 
-    
+
     <!--RepeatButtonTemplate-->
     <ControlTemplate x:Key="RepeatButtonTemplate">
         <Grid x:Name="Root" Opacity="0" />
@@ -89,8 +81,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid x:Name="Root"
-                          Margin="0,-1,0,0">
+                    <Grid x:Name="Root" Margin="0,-1,0,0">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
@@ -99,8 +90,7 @@
                                 <VisualState x:Name="Disabled" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Rectangle Height="3"
-                                   Margin="0,1,0,0">
+                        <Rectangle Height="3" Margin="0,1,0,0">
                             <Rectangle.Fill>
                                 <SolidColorBrush Color="White" />
                             </Rectangle.Fill>
@@ -111,8 +101,7 @@
         </Setter>
 
     </Style>
-    <Style x:Key="HorizontalTrackValue"
-           TargetType="{x:Type RepeatButton}">
+    <Style x:Key="HorizontalTrackValue" TargetType="{x:Type RepeatButton}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="IsTabStop" Value="false" />
         <Setter Property="Focusable" Value="false" />
@@ -163,17 +152,13 @@
                                 <VisualState x:Name="Focused" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Grid x:Name="HorizontalTemplate"
-                              Background="{TemplateBinding Background}">
+                        <Grid x:Name="HorizontalTemplate" Background="{TemplateBinding Background}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Track x:Name="PART_Track"
-                                   Grid.ColumnSpan="3"
-                                   Grid.Column="0"
-                                   Height="18">
+                            <Track x:Name="PART_Track" Grid.ColumnSpan="3" Grid.Column="0" Height="18">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource HorizontalTrackValue}" />
                                 </Track.DecreaseRepeatButton>
@@ -181,28 +166,18 @@
                                     <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource HorizontalTrackLargeDecrease}" />
                                 </Track.IncreaseRepeatButton>
                                 <Track.Thumb>
-                                    <Thumb x:Name="HorizontalThumb"
-                                           Grid.Column="1"
-                                           Height="18"
-                                           IsTabStop="True"
-                                           Width="5"
+                                    <Thumb x:Name="HorizontalThumb" Grid.Column="1" Height="18" IsTabStop="True" Width="5"
                                            Style="{StaticResource HorizontalSliderThumb}" />
                                 </Track.Thumb>
                             </Track>
                         </Grid>
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="TickPlacement"
-                                 Value="TopLeft">
-                            <Setter Property="Style"
-                                    TargetName="HorizontalThumb"
-                                    Value="{StaticResource HorizontalSliderThumb}" />
+                        <Trigger Property="TickPlacement" Value="TopLeft">
+                            <Setter Property="Style" TargetName="HorizontalThumb" Value="{StaticResource HorizontalSliderThumb}" />
                         </Trigger>
-                        <Trigger Property="TickPlacement"
-                                 Value="BottomRight">
-                            <Setter Property="Style"
-                                    TargetName="HorizontalThumb"
-                                    Value="{StaticResource HorizontalSliderThumb}" />
+                        <Trigger Property="TickPlacement" Value="BottomRight">
+                            <Setter Property="Style" TargetName="HorizontalThumb" Value="{StaticResource HorizontalSliderThumb}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

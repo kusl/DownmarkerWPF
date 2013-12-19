@@ -1,9 +1,8 @@
-﻿body
-{
+﻿body {
     font-family: Consolas;
     color: rgb(241, 242, 243);
     background-color: rgb(34, 40, 42);
-	font-size: 14pt;
+    font-size: 14pt;
 }
 
 a { color: rgb(147, 199, 99); }

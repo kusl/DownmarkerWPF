@@ -11,10 +11,10 @@ namespace MarkPad.Document.Search
 {
     public class SearchProvider : ISearchProvider, INotifyPropertyChanged
     {
-        private readonly SearchBackgroundRenderer searchRenderer;
-        private DocumentView view;
+        readonly SearchBackgroundRenderer searchRenderer;
+        DocumentView view;
 
-        private readonly SearchSettings searchSettings;
+        readonly SearchSettings searchSettings;
         int lastCaretPosition = -1;
 
         public IEnumerable<TextSegment> SearchHits { get; private set; }
@@ -51,7 +51,7 @@ namespace MarkPad.Document.Search
             view = null;
         }
 
-        private void TextViewVisualLinesChanged(object sender, EventArgs e)
+        void TextViewVisualLinesChanged(object sender, EventArgs e)
         {
             DoSearch(SearchType.NoSelect, false);
         }
@@ -93,8 +93,8 @@ namespace MarkPad.Document.Search
                 VisualLine currentLine = view.TextView.GetOrConstructVisualLine(currentDocLine);
 
                 string originalText = view.Document.GetText(currentLine.FirstDocumentLine.Offset,
-                                                            currentLine.LastDocumentLine.EndOffset -
-                                                            currentLine.FirstDocumentLine.Offset);
+                    currentLine.LastDocumentLine.EndOffset -
+                    currentLine.FirstDocumentLine.Offset);
 
                 try
                 {
@@ -109,13 +109,16 @@ namespace MarkPad.Document.Search
                         searchRenderer.SearchHitsSegments.Add(textSegment);
                     }
                 }
-                catch (ArgumentException) {} // catch malformed regex
+                catch (ArgumentException)
+                {
+                } // catch malformed regex
             }
 
             TextSegment newFoundHit = null;
             var startLookingFrom = view.Editor.CaretOffset;
             // consider the already selected text when searching, skip it on SearchType.Next
-            if (!view.Editor.TextArea.Selection.IsEmpty && searchType != SearchType.Next && searchType != SearchType.Replace)
+            if (!view.Editor.TextArea.Selection.IsEmpty && searchType != SearchType.Next &&
+                searchType != SearchType.Replace)
             {
                 startLookingFrom = view.Editor.SelectionStart;
             }
@@ -126,21 +129,21 @@ namespace MarkPad.Document.Search
                 case SearchType.Next:
 
                     newFoundHit = (from hit in SearchHits
-                                   let hitDistance = hit.StartOffset - startLookingFrom
-                                   where hitDistance >= 0
-                                   orderby hitDistance
-                                   select hit)
-                              .FirstOrDefault() ?? SearchHits.FirstOrDefault();
+                        let hitDistance = hit.StartOffset - startLookingFrom
+                        where hitDistance >= 0
+                        orderby hitDistance
+                        select hit)
+                        .FirstOrDefault() ?? SearchHits.FirstOrDefault();
                     break;
 
                 case SearchType.Prev:
 
                     newFoundHit = (from hit in SearchHits
-                                   let hitDistance = hit.StartOffset - startLookingFrom
-                                   where hitDistance < 0
-                                   orderby hitDistance descending
-                                   select hit)
-                                    .FirstOrDefault() ?? SearchHits.Reverse().FirstOrDefault();
+                        let hitDistance = hit.StartOffset - startLookingFrom
+                        where hitDistance < 0
+                        orderby hitDistance descending
+                        select hit)
+                        .FirstOrDefault() ?? SearchHits.Reverse().FirstOrDefault();
                     break;
             }
 
@@ -153,19 +156,28 @@ namespace MarkPad.Document.Search
                     if (selectSearch)
                     {
                         view.Editor.Select(hit.StartOffset, hit.Length);
-                        view.Editor.ScrollToLine(view.Editor.Document.GetLineByOffset(view.Editor.SelectionStart).LineNumber);
+                        view.Editor.ScrollToLine(
+                            view.Editor.Document.GetLineByOffset(view.Editor.SelectionStart).LineNumber);
                     }
 
                     lastCaretPosition = view.Editor.CaretOffset;
-                    CurrentHitIndex = SearchHits.Select((v, i) => new { hit = v, index = i }).First(arg => arg.hit.Equals(newFoundHit)).index + 1;
+                    CurrentHitIndex =
+                        SearchHits.Select((v, i) => new {hit = v, index = i})
+                            .First(arg => arg.hit.Equals(newFoundHit))
+                            .index + 1;
                 });
             }
 
             NumberOfHits = searchRenderer.SearchHitsSegments.Count;
 
             // don't show index of a match if we're searching without a search bar, if there are no matches, or if we're in a NoSelect search and there isn't an already selected old match in the editor
-            var selectedText = new TextSegment { StartOffset = view.Editor.SelectionStart, Length = view.Editor.SelectionLength };
-            if (!searchSettings.SearchingWithBar || !searchRenderer.SearchHitsSegments.Any() || (!selectSearch && newFoundHit != null && !newFoundHit.EqualsByValue(selectedText)))
+            var selectedText = new TextSegment
+            {
+                StartOffset = view.Editor.SelectionStart,
+                Length = view.Editor.SelectionLength
+            };
+            if (!searchSettings.SearchingWithBar || !searchRenderer.SearchHitsSegments.Any() ||
+                (!selectSearch && newFoundHit != null && !newFoundHit.EqualsByValue(selectedText)))
             {
                 CurrentHitIndex = 0;
             }
@@ -177,11 +189,11 @@ namespace MarkPad.Document.Search
                 view.Editor.TextArea.Selection.ReplaceSelectionWithText(replaceTerm.Trim());
 
                 newFoundHit = (from hit in SearchHits
-                               let hitDistance = hit.StartOffset - startLookingFrom
-                               where hitDistance >= 0
-                               orderby hitDistance
-                               select hit)
-                              .FirstOrDefault() ?? SearchHits.FirstOrDefault();
+                    let hitDistance = hit.StartOffset - startLookingFrom
+                    where hitDistance >= 0
+                    orderby hitDistance
+                    select hit)
+                    .FirstOrDefault() ?? SearchHits.FirstOrDefault();
 
                 newFoundHit.ExecuteSafely(hit =>
                 {
@@ -189,11 +201,15 @@ namespace MarkPad.Document.Search
                     if (selectSearch)
                     {
                         view.Editor.Select(hit.StartOffset, hit.Length);
-                        view.Editor.ScrollToLine(view.Editor.Document.GetLineByOffset(view.Editor.SelectionStart).LineNumber);
+                        view.Editor.ScrollToLine(
+                            view.Editor.Document.GetLineByOffset(view.Editor.SelectionStart).LineNumber);
                     }
 
                     lastCaretPosition = view.Editor.CaretOffset;
-                    CurrentHitIndex = SearchHits.Select((v, i) => new { hit = v, index = i }).First(arg => arg.hit.Equals(newFoundHit)).index + 1;
+                    CurrentHitIndex =
+                        SearchHits.Select((v, i) => new {hit = v, index = i})
+                            .First(arg => arg.hit.Equals(newFoundHit))
+                            .index + 1;
                 });
             }
 
@@ -204,7 +220,7 @@ namespace MarkPad.Document.Search
             }
         }
 
-        private void ClearSearchHits()
+        void ClearSearchHits()
         {
             if (searchRenderer == null) return;
             searchRenderer.SearchHitsSegments.Clear();

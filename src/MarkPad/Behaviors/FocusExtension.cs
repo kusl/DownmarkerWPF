@@ -23,7 +23,7 @@ namespace MarkPad.Behaviors
                 new UIPropertyMetadata(false, OnIsFocusedPropertyChanged));
 
 
-        private static void OnIsFocusedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void OnIsFocusedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var uie = (UIElement) d;
             if ((bool) e.NewValue)

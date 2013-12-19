@@ -41,7 +41,7 @@ namespace MarkPad.Settings
         {
             var ms = new MemoryStream();
             var writer = JsonReaderWriterFactory.CreateJsonWriter(ms, Encoding.Unicode);
-            new DataContractJsonSerializer(typeof(List<string>)).WriteObject(ms, listOfItems);
+            new DataContractJsonSerializer(typeof (List<string>)).WriteObject(ms, listOfItems);
             writer.Flush();
             var jsonString = Encoding.Default.GetString(ms.ToArray());
 
@@ -50,7 +50,7 @@ namespace MarkPad.Settings
 
         public List<string> DeserializeList(string serializedList)
         {
-            return (List<string>)new DataContractJsonSerializer(typeof(List<string>))
+            return (List<string>) new DataContractJsonSerializer(typeof (List<string>))
                 .ReadObject(new MemoryStream(Encoding.Default.GetBytes(serializedList)));
         }
 
@@ -58,7 +58,7 @@ namespace MarkPad.Settings
         {
             var filename = key + ".settings";
 
-            var serializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
+            var serializer = new DataContractJsonSerializer(typeof (Dictionary<string, string>));
             var ms = new MemoryStream();
             var writer = JsonReaderWriterFactory.CreateJsonWriter(ms, Encoding.Unicode);
             serializer.WriteObject(ms, settings);
@@ -76,8 +76,10 @@ namespace MarkPad.Settings
             var readTextFile = ReadTextFile(filename);
             if (!string.IsNullOrEmpty(readTextFile))
             {
-                var serializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
-                return (Dictionary<string, string>)serializer.ReadObject(new MemoryStream(Encoding.Default.GetBytes(readTextFile)));
+                var serializer = new DataContractJsonSerializer(typeof (Dictionary<string, string>));
+                return
+                    (Dictionary<string, string>)
+                        serializer.ReadObject(new MemoryStream(Encoding.Default.GetBytes(readTextFile)));
             }
 
             return new Dictionary<string, string>();

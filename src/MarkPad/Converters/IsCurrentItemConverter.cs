@@ -23,5 +23,4 @@ namespace MarkPad.Converters
             throw new NotImplementedException();
         }
     }
-
 }

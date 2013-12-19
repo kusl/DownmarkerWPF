@@ -5,9 +5,9 @@ namespace MarkPad.Infrastructure
 {
     public class AwaitableDelegateCommand<T> : IAsyncCommand<T>
     {
-        private readonly Func<T, Task> executeMethod;
-        private readonly DelegateCommand<T> underlyingCommand;
-        private bool isExecuting;
+        readonly Func<T, Task> executeMethod;
+        readonly DelegateCommand<T> underlyingCommand;
+        bool isExecuting;
 
         public AwaitableDelegateCommand(Func<T, Task> executeMethod)
             : this(executeMethod, _ => true)
@@ -37,7 +37,7 @@ namespace MarkPad.Infrastructure
 
         public bool CanExecute(object parameter)
         {
-            return !isExecuting && underlyingCommand.CanExecute((T)parameter);
+            return !isExecuting && underlyingCommand.CanExecute((T) parameter);
         }
 
         public event EventHandler CanExecuteChanged
@@ -48,7 +48,7 @@ namespace MarkPad.Infrastructure
 
         public async void Execute(object parameter)
         {
-            await ExecuteAsync((T)parameter);
+            await ExecuteAsync((T) parameter);
         }
 
         public void RaiseCanExecuteChanged()

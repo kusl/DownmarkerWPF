@@ -1,4 +1,6 @@
 namespace MarkPad.Infrastructure
 {
-    public interface IAsyncCommand : IAsyncCommand<object> { }
+    public interface IAsyncCommand : IAsyncCommand<object>
+    {
+    }
 }

@@ -9,7 +9,9 @@ namespace MarkPad.Document.EditorBehaviours
     public class PasteURLIntoDocument : IHandle<EditorPreviewKeyDownEvent>
     {
         // "URL: Find in full text (protocol optional)" from the RegexBuddy library, with ^$ anchors added
-        readonly Regex URLInTextRegex = new Regex(@"^\b((?:(?:https?|ftp|file)://|www\.|ftp\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#/%=~_|$]$)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        readonly Regex URLInTextRegex =
+            new Regex(@"^\b((?:(?:https?|ftp|file)://|www\.|ftp\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#/%=~_|$]$)",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public void Handle(EditorPreviewKeyDownEvent e)
         {
@@ -20,13 +22,17 @@ namespace MarkPad.Document.EditorBehaviours
             var match = URLInTextRegex.Match(pastedText);
             if (!match.Success) return;
 
-            if (e.Editor.SelectionStart != 0 && (e.Editor.SelectionStart + e.Editor.SelectionLength) != e.Editor.Document.TextLength) // check if at beginning or end of document
+            if (e.Editor.SelectionStart != 0 &&
+                (e.Editor.SelectionStart + e.Editor.SelectionLength) != e.Editor.Document.TextLength)
+                // check if at beginning or end of document
             {
-                if (e.Editor.Document.GetCharAt(e.Editor.SelectionStart - 1) == '[' && e.Editor.Document.GetCharAt(e.Editor.SelectionStart + e.Editor.SelectionLength) == ']')
+                if (e.Editor.Document.GetCharAt(e.Editor.SelectionStart - 1) == '[' &&
+                    e.Editor.Document.GetCharAt(e.Editor.SelectionStart + e.Editor.SelectionLength) == ']')
                 {
                     return;
                 }
-                if (e.Editor.Document.GetCharAt(e.Editor.SelectionStart - 1) == '"' && e.Editor.Document.GetCharAt(e.Editor.SelectionStart + e.Editor.SelectionLength) == '"')
+                if (e.Editor.Document.GetCharAt(e.Editor.SelectionStart - 1) == '"' &&
+                    e.Editor.Document.GetCharAt(e.Editor.SelectionStart + e.Editor.SelectionLength) == '"')
                 {
                     return;
                 }

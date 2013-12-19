@@ -62,12 +62,12 @@ namespace MarkPad.Settings.Models
             }
         }
 
-        private string beginblogName;
-        private string beginwebApi;
-        private BlogInfo beginblogInfo;
-        private string beginusername;
-        private string beginpassword;
-        private string beginlanguage;
+        string beginblogName;
+        string beginwebApi;
+        BlogInfo beginblogInfo;
+        string beginusername;
+        string beginpassword;
+        string beginlanguage;
 
         public void BeginEdit()
         {

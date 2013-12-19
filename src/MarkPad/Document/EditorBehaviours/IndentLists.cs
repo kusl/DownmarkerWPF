@@ -58,7 +58,7 @@ namespace MarkPad.Document.EditorBehaviours
             return true;
         }
 
-        private void InsertIndent(TextEditor editor)
+        void InsertIndent(TextEditor editor)
         {
             var currentOffset = editor.CaretOffset;
             editor.CaretOffset = editor.GetCurrentLine().Offset;

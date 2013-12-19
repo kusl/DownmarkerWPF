@@ -47,7 +47,8 @@ namespace MarkPad.Document.SpellCheck
 
             var assembly = Assembly.GetExecutingAssembly();
 
-            var dictionaryFileStart = string.Format("{0}.Document.SpellCheck.Dictionaries.{1}", assembly.GetName().Name, languageKey);
+            var dictionaryFileStart = string.Format("{0}.Document.SpellCheck.Dictionaries.{1}", assembly.GetName().Name,
+                languageKey);
             var dictionaryFiles = assembly
                 .GetManifestResourceNames()
                 .Where(name => name.StartsWith(dictionaryFileStart))
@@ -56,7 +57,7 @@ namespace MarkPad.Document.SpellCheck
             var affixes = dictionaryFiles.Where(name => name.EndsWith(".aff")).OrderBy(s => s);
             var dictionaries = dictionaryFiles.Where(name => name.EndsWith(".dic")).OrderBy(s => s);
 
-            var dictionaryPairs = affixes.Zip(dictionaries, (aff, dic) => new { aff, dic });
+            var dictionaryPairs = affixes.Zip(dictionaries, (aff, dic) => new {aff, dic});
 
             foreach (var pair in dictionaryPairs)
             {
@@ -65,8 +66,8 @@ namespace MarkPad.Document.SpellCheck
                 {
                     if (affStream != null && dicStream != null)
                     {
-                        var affBytes = new BinaryReader(affStream).ReadBytes((int)affStream.Length);
-                        var dicBytes = new BinaryReader(dicStream).ReadBytes((int)dicStream.Length);
+                        var affBytes = new BinaryReader(affStream).ReadBytes((int) affStream.Length);
+                        var dicBytes = new BinaryReader(dicStream).ReadBytes((int) dicStream.Length);
 
                         speller.Load(affBytes, dicBytes);
                     }

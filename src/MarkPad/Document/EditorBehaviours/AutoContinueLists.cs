@@ -29,7 +29,7 @@ namespace MarkPad.Document.EditorBehaviours
         {
             if (Keyboard.Modifiers != ModifierKeys.None) return;
             if (e.Args.Key != Key.Enter) return;
-            
+
             // should really handle shift-enter too (insert hard break, indent, then on enter restart list)...
 
             //if (!e.Editor.IsCaratAtEndOfLine()) return;
@@ -102,7 +102,7 @@ namespace MarkPad.Document.EditorBehaviours
             return match;
         }
 
-        private static void EndList(TextEditor editor)
+        static void EndList(TextEditor editor)
         {
             var currentPosition = editor.TextArea.Caret.Offset;
             editor.SelectionStart = editor.GetCurrentLine().Offset;

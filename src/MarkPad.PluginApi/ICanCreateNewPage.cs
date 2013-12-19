@@ -2,10 +2,10 @@
 
 namespace MarkPad.Plugins
 {
-	[InheritedExport]
-	public interface ICanCreateNewPage : IPlugin
-	{
-		string CreateNewPageLabel { get; }
-		string CreateNewPage();
-	}
+    [InheritedExport]
+    public interface ICanCreateNewPage : IPlugin
+    {
+        string CreateNewPageLabel { get; }
+        string CreateNewPage();
+    }
 }

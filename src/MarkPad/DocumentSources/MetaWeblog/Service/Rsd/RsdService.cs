@@ -39,7 +39,8 @@ namespace MarkPad.DocumentSources.MetaWeblog.Service.Rsd
                     else
                     {
                         Trace.WriteLine(string.Format(
-                            "Rsd.xml does not exist, trying to discover via link. Error was {0}", c.Result.FailMessage), "INFO");
+                            "Rsd.xml does not exist, trying to discover via link. Error was {0}", c.Result.FailMessage),
+                            "INFO");
 
                         DiscoverRsdLink(webAPI)
                             .ContinueWith(t => completionSource.SetResult(t.Result));
@@ -56,27 +57,28 @@ namespace MarkPad.DocumentSources.MetaWeblog.Service.Rsd
             // Build a request to retrieve the contents of the specified URL directly
             var requestUri = new Uri(webAPI, UriKind.Absolute);
             var directWebAPIRequest = webRequestFactory.Create(requestUri);
-            
+
             // Add a continuation that will only execute if the request succeeds and proceses the response to look for a <link> to the RSD
             directWebAPIRequest.GetResponseAsync()
                 .ContinueWith(webAPIRequestAntecedent =>
-            {
-                if (webAPIRequestAntecedent.IsFaulted)
                 {
-                    taskCompletionSource.SetResult(new DiscoveryResult(webAPIRequestAntecedent.Exception));
-                    return;
-                }
-                using (var webAPIResponse = webAPIRequestAntecedent.Result)
-                using (var streamReader = new StreamReader(GetResponseStream(webAPIResponse)))
-                {
-                    DiscoverRsdOnPage(webAPI, streamReader, taskCompletionSource);
-                }
-            });
+                    if (webAPIRequestAntecedent.IsFaulted)
+                    {
+                        taskCompletionSource.SetResult(new DiscoveryResult(webAPIRequestAntecedent.Exception));
+                        return;
+                    }
+                    using (var webAPIResponse = webAPIRequestAntecedent.Result)
+                    using (var streamReader = new StreamReader(GetResponseStream(webAPIResponse)))
+                    {
+                        DiscoverRsdOnPage(webAPI, streamReader, taskCompletionSource);
+                    }
+                });
 
             return taskCompletionSource.Task;
         }
 
-        void DiscoverRsdOnPage(string webAPI, TextReader streamReader, TaskCompletionSource<DiscoveryResult> taskCompletionSource)
+        void DiscoverRsdOnPage(string webAPI, TextReader streamReader,
+            TaskCompletionSource<DiscoveryResult> taskCompletionSource)
         {
             const string linkTagRegex = "(?<link>\\<link .*?type=\"application/rsd\\+xml\".*?/\\>)";
 
@@ -106,16 +108,16 @@ namespace MarkPad.DocumentSources.MetaWeblog.Service.Rsd
 
             // Add a continuation that will only execute if the request succeeds and continues processing the RSD
             rdsWebRequestTask.ContinueWith(rdsWebRequestAntecedent =>
-                                           taskCompletionSource.SetResult(ProcessRsdResponse(rdsWebRequestAntecedent)),
-                                           TaskContinuationOptions.NotOnFaulted);
+                taskCompletionSource.SetResult(ProcessRsdResponse(rdsWebRequestAntecedent)),
+                TaskContinuationOptions.NotOnFaulted);
 
             // Add a continuation that will only execute if the request faults and propagates the exception via the TCS
             rdsWebRequestTask.ContinueWith(rdsWebRequestAntecdent =>
-                                           taskCompletionSource.SetResult(new DiscoveryResult(rdsWebRequestAntecdent.Exception)),
-                                           TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted);
+                taskCompletionSource.SetResult(new DiscoveryResult(rdsWebRequestAntecdent.Exception)),
+                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted);
         }
 
-        private static Stream GetResponseStream(WebResponse webAPIResponse)
+        static Stream GetResponseStream(WebResponse webAPIResponse)
         {
             return webAPIResponse.GetResponseStream();
         }
@@ -151,7 +153,7 @@ namespace MarkPad.DocumentSources.MetaWeblog.Service.Rsd
             }
         }
 
-        private static XElement GetMetaWebLogElement(XDocument document)
+        static XElement GetMetaWebLogElement(XDocument document)
         {
             // ReSharper disable PossibleNullReferenceException
             try

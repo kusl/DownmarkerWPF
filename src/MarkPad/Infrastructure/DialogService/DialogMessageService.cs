@@ -40,16 +40,16 @@ namespace MarkPad.Infrastructure.DialogService
         Shield
     }
 
-    internal class DialogMessageService
+    class DialogMessageService
     {
-        private readonly Window owner;
+        readonly Window owner;
 
         public DialogMessageService(Window owner)
         {
             this.owner = owner;
         }
 
-        private DialogMessageResult DoOokiiMsgBox()
+        DialogMessageResult DoOokiiMsgBox()
         {
             var td = new TaskDialog();
 
@@ -121,7 +121,7 @@ namespace MarkPad.Infrastructure.DialogService
             {
                 var dispatcher = owner.Dispatcher;
 
-                result = (TaskDialogButton)dispatcher.Invoke(
+                result = (TaskDialogButton) dispatcher.Invoke(
                     new Func<TaskDialogButton>(() => td.ShowDialog(owner)),
                     System.Windows.Threading.DispatcherPriority.Normal);
             }
@@ -131,8 +131,9 @@ namespace MarkPad.Infrastructure.DialogService
             {
                 if (ButtonExtras != null)
                 {
-                    var button = ButtonExtras.SingleOrDefault(b => b.ButtonType == ButtonType.Custom && b.Text == result.Text);
-                    if (button != null) 
+                    var button =
+                        ButtonExtras.SingleOrDefault(b => b.ButtonType == ButtonType.Custom && b.Text == result.Text);
+                    if (button != null)
                         button.WasClicked = true;
                 }
                 resultButtonType = translation[result];
@@ -157,7 +158,7 @@ namespace MarkPad.Infrastructure.DialogService
             return DialogMessageResult.None;
         }
 
-        private DialogMessageResult DoWin32MsgBox()
+        DialogMessageResult DoWin32MsgBox()
         {
             MessageBoxButton button = MessageBoxButton.OK;
             if (Buttons == (DialogMessageButtons.Ok | DialogMessageButtons.Cancel))
@@ -188,13 +189,17 @@ namespace MarkPad.Infrastructure.DialogService
             MessageBoxResult result = MessageBoxResult.None;
 
             if (owner == null)
-                result = MessageBox.Show(string.Format("{0}{1}{1}{2}", Text, Environment.NewLine, Extra), Title, button, icon);
+                result = MessageBox.Show(string.Format("{0}{1}{1}{2}", Text, Environment.NewLine, Extra), Title, button,
+                    icon);
             else
             {
                 var dispatcher = owner.Dispatcher;
 
-                result = (MessageBoxResult)dispatcher.Invoke(
-                    new Func<MessageBoxResult>(() => MessageBox.Show(owner, string.Format("{0}{1}{1}{2}", Text, Environment.NewLine, Extra), Title, button, icon)),
+                result = (MessageBoxResult) dispatcher.Invoke(
+                    new Func<MessageBoxResult>(
+                        () =>
+                            MessageBox.Show(owner, string.Format("{0}{1}{1}{2}", Text, Environment.NewLine, Extra),
+                                Title, button, icon)),
                     System.Windows.Threading.DispatcherPriority.Normal);
             }
 

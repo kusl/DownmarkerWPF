@@ -48,7 +48,8 @@ namespace MarkPad.Tests.DocumentSources.FileSystem
                 await documentUnderTest.Save();
             }
             catch (TaskCanceledException)
-            {}
+            {
+            }
 
             // assert
             string format = string.Format("{0} is readonly, what do you want to do?", DocumentFilename);
@@ -65,9 +66,11 @@ namespace MarkPad.Tests.DocumentSources.FileSystem
             fileInfo.IsReadOnly.Returns(true);
             fileSystem.FileInfo(DocumentFilename).Returns(fileInfo);
             dialogService
-                .ShowConfirmationWithCancel(Arg.Is("Markpad"), Arg.Any<string>(), Arg.Is((string)null), Arg.Any<ButtonExtras>(), Arg.Any<ButtonExtras>())
+                .ShowConfirmationWithCancel(Arg.Is("Markpad"), Arg.Any<string>(), Arg.Is((string) null),
+                    Arg.Any<ButtonExtras>(), Arg.Any<ButtonExtras>())
                 .Returns(false); // false is dont make writable... =\
-            var savedAsDocument = TaskEx.FromResult<IMarkpadDocument>(CreateFileMarkdownDocument(@"c:\Dir\AnotherFile.md", "Content"));
+            var savedAsDocument =
+                TaskEx.FromResult<IMarkpadDocument>(CreateFileMarkdownDocument(@"c:\Dir\AnotherFile.md", "Content"));
             documentFactory.SaveDocumentAs(documentUnderTest).Returns(savedAsDocument);
 
             // act
@@ -85,7 +88,8 @@ namespace MarkPad.Tests.DocumentSources.FileSystem
             fileInfo.IsReadOnly.Returns(true);
             fileSystem.FileInfo(DocumentFilename).Returns(fileInfo);
             dialogService
-                .ShowConfirmationWithCancel(Arg.Is("Markpad"), Arg.Any<string>(), Arg.Is((string)null), Arg.Any<ButtonExtras>(), Arg.Any<ButtonExtras>())
+                .ShowConfirmationWithCancel(Arg.Is("Markpad"), Arg.Any<string>(), Arg.Is((string) null),
+                    Arg.Any<ButtonExtras>(), Arg.Any<ButtonExtras>())
                 .Returns(true); // true is make writable... =\
 
             // act
@@ -94,7 +98,9 @@ namespace MarkPad.Tests.DocumentSources.FileSystem
             // assert
             Assert.False(fileInfo.IsReadOnly);
             Assert.Same(savedDocument, documentUnderTest);
-            fileSystem.File.Received().WriteAllTextAsync(DocumentFilename, "Content").IgnoreAwaitForNSubstituteAssertion();
+            fileSystem.File.Received()
+                .WriteAllTextAsync(DocumentFilename, "Content")
+                .IgnoreAwaitForNSubstituteAssertion();
         }
 
         [Fact]

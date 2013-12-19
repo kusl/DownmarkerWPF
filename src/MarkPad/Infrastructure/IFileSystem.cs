@@ -64,7 +64,7 @@ namespace MarkPad.Infrastructure
 
         public Bitmap OpenBitmap(string fullPath)
         {
-            return (Bitmap)Image.FromFile(fullPath);
+            return (Bitmap) Image.FromFile(fullPath);
         }
 
         public void SaveImagePng(Bitmap image, string imageFileName)
@@ -96,7 +96,10 @@ namespace MarkPad.Infrastructure
             set { fileInfo.IsReadOnly = value; }
         }
 
-        public string Name { get { return fileInfo.Name; } }
+        public string Name
+        {
+            get { return fileInfo.Name; }
+        }
     }
 
     public class DirectoryOperations : IDirectory

@@ -23,7 +23,7 @@ namespace MarkPad.Document.Controls
             TryClose();
         }
 
-		public void Accept()
+        public void Accept()
         {
             TryClose();
         }

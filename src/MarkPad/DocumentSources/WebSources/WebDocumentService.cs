@@ -23,8 +23,8 @@ namespace MarkPad.DocumentSources.WebSources
         readonly IDialogService dialogService;
 
         public WebDocumentService(
-            IGithubApi githubApi, 
-            Func<string, IMetaWeblogService> getMetaWeblog, 
+            IGithubApi githubApi,
+            Func<string, IMetaWeblogService> getMetaWeblog,
             IDialogService dialogService)
         {
             this.githubApi = githubApi;
@@ -36,7 +36,7 @@ namespace MarkPad.DocumentSources.WebSources
         {
             if (blog.WebSourceType == WebSourceType.MetaWebLog)
             {
-                await getMetaWeblog(blog.WebAPI).DeletePostAsync((string)post.postid, blog);
+                await getMetaWeblog(blog.WebAPI).DeletePostAsync((string) post.postid, blog);
                 return;
             }
             if (blog.WebSourceType == WebSourceType.GitHub)
@@ -59,13 +59,10 @@ namespace MarkPad.DocumentSources.WebSources
             }
             if (blog.WebSourceType == WebSourceType.GitHub)
             {
-                return CreateOrUpdateGithubPost(document.Title, document.MarkdownContent, document.AssociatedFiles, blog);   
+                return CreateOrUpdateGithubPost(document.Title, document.MarkdownContent, document.AssociatedFiles, blog);
             }
 
-            return TaskEx.Run(new Func<SaveResult>(() =>
-            {
-                throw BadWebSourceTypeException(blog);
-            }));
+            return TaskEx.Run(new Func<SaveResult>(() => { throw BadWebSourceTypeException(blog); }));
         }
 
         static ArgumentException BadWebSourceTypeException(BlogSetting blog)
@@ -85,13 +82,14 @@ namespace MarkPad.DocumentSources.WebSources
                 return await githubApi.FetchFileContents(blog.Token, blog.Username, blog.WebAPI, id);
             }
 
-            throw BadWebSourceTypeException(blog);            
+            throw BadWebSourceTypeException(blog);
         }
 
-        async Task<SaveResult> CreateOrUpdateGithubPost(string postTitle, string content, IEnumerable<FileReference> referencedFiles, BlogSetting blog)
+        async Task<SaveResult> CreateOrUpdateGithubPost(string postTitle, string content,
+            IEnumerable<FileReference> referencedFiles, BlogSetting blog)
         {
             var treeToUpload = new GitTree();
-            var imagesToUpload = referencedFiles.Where(f=>!f.Saved).ToList();
+            var imagesToUpload = referencedFiles.Where(f => !f.Saved).ToList();
             if (imagesToUpload.Count > 0)
             {
                 foreach (var imageToUpload in imagesToUpload)
@@ -101,7 +99,7 @@ namespace MarkPad.DocumentSources.WebSources
                     {
                         type = "tree",
                         path = imageToUpload.FullPath,
-                        mode = ((int)GitTreeMode.SubDirectory),
+                        mode = ((int) GitTreeMode.SubDirectory),
                         content = imageContent
                     };
 
@@ -113,12 +111,13 @@ namespace MarkPad.DocumentSources.WebSources
             {
                 path = postTitle,
                 content = content,
-                mode = (int)GitTreeMode.File,
+                mode = (int) GitTreeMode.File,
                 type = "blob"
             };
             treeToUpload.tree.Add(gitFile);
 
-            var newTree = await githubApi.NewTree(blog.Token, blog.Username, blog.WebAPI, blog.BlogInfo.blogid, treeToUpload);
+            var newTree =
+                await githubApi.NewTree(blog.Token, blog.Username, blog.WebAPI, blog.BlogInfo.blogid, treeToUpload);
             var uploadedFile = newTree.Item1.tree.Single(t => t.path == gitFile.path);
             foreach (var fileReference in imagesToUpload)
             {
@@ -126,10 +125,10 @@ namespace MarkPad.DocumentSources.WebSources
             }
 
             return new SaveResult
-                   {
-                       Id = uploadedFile.sha,
-                       NewDocumentContent = content
-                   };
+            {
+                Id = uploadedFile.sha,
+                NewDocumentContent = content
+            };
         }
 
         SaveResult CreateOrUpdateMetaWebLogPost(WebDocument document, string[] categories, BlogSetting blog)
@@ -137,9 +136,9 @@ namespace MarkPad.DocumentSources.WebSources
             var newContent = document.MarkdownContent;
             var proxy = getMetaWeblog(blog.WebAPI);
 
-            if (document.AssociatedFiles.Count(f=>!f.Saved) > 0)
+            if (document.AssociatedFiles.Count(f => !f.Saved) > 0)
             {
-                foreach (var imageToUpload in document.AssociatedFiles.Where(f=>!f.Saved))
+                foreach (var imageToUpload in document.AssociatedFiles.Where(f => !f.Saved))
                 {
                     var response = proxy.NewMediaObject(blog, new MediaObject
                     {
@@ -175,7 +174,9 @@ namespace MarkPad.DocumentSources.WebSources
                 {
                     newpost = proxy.GetPost(document.Id, blog);
                     newpost.title = document.Title;
-                    newpost.description = blog.Language == "HTML" ? DocumentParser.GetBodyContents(newContent) : newContent;
+                    newpost.description = blog.Language == "HTML"
+                        ? DocumentParser.GetBodyContents(newContent)
+                        : newContent;
                     newpost.categories = categories;
                     newpost.format = blog.Language;
 
@@ -196,10 +197,10 @@ namespace MarkPad.DocumentSources.WebSources
             }
 
             return new SaveResult
-                   {
-                       Id = newpost.postid.ToString(),
-                       NewDocumentContent = newContent
-                   };
+            {
+                Id = newpost.postid.ToString(),
+                NewDocumentContent = newContent
+            };
         }
 
         public static string GetSha1(string value)

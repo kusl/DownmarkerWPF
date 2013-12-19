@@ -14,14 +14,19 @@ namespace MarkPad.DocumentSources.NewDocument
         readonly IFileSystem fileSystem;
         readonly List<FileReference> imagesToSave = new List<FileReference>();
 
-        public NewMarkpadDocument(IFileSystem fileSystem, IDocumentFactory documentFactory, string content) : 
-            base("New Document", content, null, new FileReference[0], documentFactory, new NewDocumentContext(fileSystem), fileSystem)
+        public NewMarkpadDocument(IFileSystem fileSystem, IDocumentFactory documentFactory, string content) :
+            base(
+            "New Document", content, null, new FileReference[0], documentFactory, new NewDocumentContext(fileSystem),
+            fileSystem)
         {
             this.fileSystem = fileSystem;
         }
 
-        public NewMarkpadDocument(IFileSystem fileSystem, IDocumentFactory documentFactory, string title, string content) :
-            base(title, content, null, new FileReference[0], documentFactory, new NewDocumentContext(fileSystem), fileSystem)
+        public NewMarkpadDocument(IFileSystem fileSystem, IDocumentFactory documentFactory, string title, string content)
+            :
+                base(
+                title, content, null, new FileReference[0], documentFactory, new NewDocumentContext(fileSystem),
+                fileSystem)
         {
             this.fileSystem = fileSystem;
         }

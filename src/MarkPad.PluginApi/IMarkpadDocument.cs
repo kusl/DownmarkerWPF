@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace MarkPad.Plugins
 {
-	public interface IMarkpadDocument : INotifyPropertyChanged
-	{
-		string MarkdownContent { get; set; }
-	    string Title { get; }
-	    ISiteContext SiteContext { get; }
-	    string SaveLocation { get; }
-	    Task<IMarkpadDocument> Save();
-	    Task<IMarkpadDocument> SaveAs();
-	    Task<IMarkpadDocument> Publish();
+    public interface IMarkpadDocument : INotifyPropertyChanged
+    {
+        string MarkdownContent { get; set; }
+        string Title { get; }
+        ISiteContext SiteContext { get; }
+        string SaveLocation { get; }
+        Task<IMarkpadDocument> Save();
+        Task<IMarkpadDocument> SaveAs();
+        Task<IMarkpadDocument> Publish();
 
         /// <summary>
         /// Saves the image to the file system
@@ -25,7 +25,7 @@ namespace MarkPad.Plugins
         IEnumerable<FileReference> AssociatedFiles { get; }
 
         string ConvertToAbsolutePaths(string htmlDocument);
-	    bool IsSameItem(ISiteItem siteItem);
-	    void AddFile(FileReference fileReference);
-	}
+        bool IsSameItem(ISiteItem siteItem);
+        void AddFile(FileReference fileReference);
+    }
 }

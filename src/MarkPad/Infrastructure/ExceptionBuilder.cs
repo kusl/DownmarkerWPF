@@ -9,7 +9,7 @@ namespace MarkPad.Infrastructure
 {
     public class ExceptionBuilder
     {
-        private static string ExceptionPartToString(string header, Exception exception, Func<Exception, string> map)
+        static string ExceptionPartToString(string header, Exception exception, Func<Exception, string> map)
         {
             string part;
 
@@ -25,7 +25,7 @@ namespace MarkPad.Infrastructure
             return header + part;
         }
 
-        private static string FunctionToString(string header, Func<string> func)
+        static string FunctionToString(string header, Func<string> func)
         {
             string part;
 
@@ -46,7 +46,7 @@ namespace MarkPad.Infrastructure
             return ExceptionToString(exception, true);
         }
 
-        private static string ExceptionToString(Exception exception, bool includeSysInfo)
+        static string ExceptionToString(Exception exception, bool includeSysInfo)
         {
             var exceptionString = new StringBuilder();
 
@@ -61,20 +61,22 @@ namespace MarkPad.Infrastructure
                 exceptionString.Append(SysInfoToString());
 
             exceptionString.AppendLine(ExceptionPartToString("Exception Source:      ", exception, e => e.Source));
-            exceptionString.AppendLine(ExceptionPartToString("Exception Type:        ", exception, e => e.GetType().FullName));
+            exceptionString.AppendLine(ExceptionPartToString("Exception Type:        ", exception,
+                e => e.GetType().FullName));
             exceptionString.AppendLine(ExceptionPartToString("Exception Message:     ", exception, e => e.Message));
-            exceptionString.AppendLine(ExceptionPartToString("Exception Target Site: ", exception, e => e.TargetSite.Name));
+            exceptionString.AppendLine(ExceptionPartToString("Exception Target Site: ", exception,
+                e => e.TargetSite.Name));
             exceptionString.AppendLine(ExceptionPartToString("", exception, EnhancedStackTrace));
 
             return exceptionString.ToString();
         }
 
-        private static string EnhancedStackTrace(Exception exception)
+        static string EnhancedStackTrace(Exception exception)
         {
             return EnhancedStackTrace(new StackTrace(exception, true));
         }
 
-        private static string EnhancedStackTrace(StackTrace stackTrace)
+        static string EnhancedStackTrace(StackTrace stackTrace)
         {
             var sb = new StringBuilder();
 
@@ -93,7 +95,7 @@ namespace MarkPad.Infrastructure
             return sb.ToString();
         }
 
-        private static string StackFrameToString(StackFrame sf)
+        static string StackFrameToString(StackFrame sf)
         {
             var sb = new StringBuilder();
             MemberInfo mi = sf.GetMethod();
@@ -105,7 +107,8 @@ namespace MarkPad.Infrastructure
 
             ParameterInfo[] parameters = sf.GetMethod().GetParameters();
             sb.Append("(");
-            sb.Append(String.Join(", ", parameters.Select(p => String.Format("{0} {1}", p.ParameterType.Name, p.Name)).ToArray()));
+            sb.Append(String.Join(", ",
+                parameters.Select(p => String.Format("{0} {1}", p.ParameterType.Name, p.Name)).ToArray()));
             sb.Append(")");
             sb.AppendLine();
 
@@ -130,7 +133,7 @@ namespace MarkPad.Infrastructure
             return sb.ToString();
         }
 
-        private static string SysInfoToString()
+        static string SysInfoToString()
         {
             var sysinfo = new StringBuilder();
 
@@ -141,22 +144,25 @@ namespace MarkPad.Infrastructure
             sysinfo.AppendLine(FunctionToString("Application Domain:    ", () => AppDomain.CurrentDomain.FriendlyName));
             sysinfo.AppendLine(FunctionToString("Assembly Codebase:     ", () => ParentAssembly.CodeBase));
             sysinfo.AppendLine(FunctionToString("Assembly Full Name:    ", () => ParentAssembly.FullName));
-            sysinfo.AppendLine(FunctionToString("Assembly Version:      ", () => ParentAssembly.GetName().Version.ToString()));
-            sysinfo.AppendLine(FunctionToString("Assembly Build Date:   ", () => AssemblyBuildDate(ParentAssembly).ToString()));
+            sysinfo.AppendLine(FunctionToString("Assembly Version:      ",
+                () => ParentAssembly.GetName().Version.ToString()));
+            sysinfo.AppendLine(FunctionToString("Assembly Build Date:   ",
+                () => AssemblyBuildDate(ParentAssembly).ToString()));
             sysinfo.AppendLine();
 
             return sysinfo.ToString();
         }
 
-        private static DateTime AssemblyBuildDate(Assembly parentAssembly)
+        static DateTime AssemblyBuildDate(Assembly parentAssembly)
         {
             try
             {
                 Version v = parentAssembly.GetName().Version;
 
-                DateTime buildDate = new DateTime(2000, 1, 1).AddDays(v.Build).AddSeconds(v.Revision * 2);
+                DateTime buildDate = new DateTime(2000, 1, 1).AddDays(v.Build).AddSeconds(v.Revision*2);
 
-                if (TimeZone.IsDaylightSavingTime(DateTime.Now, TimeZone.CurrentTimeZone.GetDaylightChanges(DateTime.Now.Year)))
+                if (TimeZone.IsDaylightSavingTime(DateTime.Now,
+                    TimeZone.CurrentTimeZone.GetDaylightChanges(DateTime.Now.Year)))
                     buildDate = buildDate.AddHours(1);
 
                 if (buildDate > DateTime.Now || v.Build < 730 || v.Revision == 0)
@@ -170,7 +176,7 @@ namespace MarkPad.Infrastructure
             }
         }
 
-        private static DateTime AssemblyFileTime(Assembly parentAssembly)
+        static DateTime AssemblyFileTime(Assembly parentAssembly)
         {
             try
             {
@@ -182,10 +188,14 @@ namespace MarkPad.Infrastructure
             }
         }
 
-        private static Assembly parentAssembly;
-        private static Assembly ParentAssembly
+        static Assembly parentAssembly;
+
+        static Assembly ParentAssembly
         {
-            get { return parentAssembly ?? (parentAssembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()); }
-        } 
+            get
+            {
+                return parentAssembly ?? (parentAssembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly());
+            }
+        }
     }
 }

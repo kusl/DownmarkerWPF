@@ -13,8 +13,9 @@ namespace MarkPad.UITests.Infrastructure
     public class MarkpadWindow : Screen
     {
         public MarkpadWindow(Application application, Window whiteWindow)
-            :base(application, whiteWindow)
-        { }
+            : base(application, whiteWindow)
+        {
+        }
 
         public MarkpadDocument NewDocument()
         {
@@ -44,10 +45,7 @@ namespace MarkPad.UITests.Infrastructure
 
         public MarkpadDocument CurrentDocument
         {
-            get
-            {
-                return new MarkpadDocument(this);
-            }
+            get { return new MarkpadDocument(this); }
         }
 
         public void WaitWhileBusy()
@@ -57,8 +55,9 @@ namespace MarkPad.UITests.Infrastructure
 
         bool ShellIsBusy()
         {
-            var currentPropertyValue = WhiteWindow.AutomationElement.GetCurrentPropertyValue(AutomationElement.HelpTextProperty);
-            return currentPropertyValue != null && ((string)currentPropertyValue).Contains("Busy");
+            var currentPropertyValue =
+                WhiteWindow.AutomationElement.GetCurrentPropertyValue(AutomationElement.HelpTextProperty);
+            return currentPropertyValue != null && ((string) currentPropertyValue).Contains("Busy");
         }
 
         public SettingsWindow Settings()

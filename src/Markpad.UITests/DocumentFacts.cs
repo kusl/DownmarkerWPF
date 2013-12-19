@@ -33,7 +33,9 @@ namespace MarkPad.UITests
 
             MainWindow.NewDocument().PasteClipboard().SaveAs(newDoc);
 
-            Assert.True(File.Exists(Path.Combine(TemporaryTestFilesDirectory, @"CanSaveNewDocWithPastedImage_images\CanSaveNewDocWithPastedImage.png")));
+            Assert.True(
+                File.Exists(Path.Combine(TemporaryTestFilesDirectory,
+                    @"CanSaveNewDocWithPastedImage_images\CanSaveNewDocWithPastedImage.png")));
         }
 
         [Fact]

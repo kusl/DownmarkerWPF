@@ -19,8 +19,8 @@ namespace MarkPad.Settings.Models
 
         public string BlogsJson { get; set; }
 
-		[DefaultValue(true)]
-		public bool FloatingToolBarEnabled { get; set; }
+        [DefaultValue(true)]
+        public bool FloatingToolBarEnabled { get; set; }
 
         public IndentType IndentType { get; set; }
 

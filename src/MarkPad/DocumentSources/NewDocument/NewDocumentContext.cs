@@ -17,12 +17,18 @@ namespace MarkPad.DocumentSources.NewDocument
 
         public ObservableCollection<ISiteItem> Items { get; private set; }
 
-        public bool IsLoading { get { return false; } }
+        public bool IsLoading
+        {
+            get { return false; }
+        }
 
         public void OpenItem(ISiteItem selectedItem)
         {
         }
 
-        public string WorkingDirectory { get { return tempPath; } }
+        public string WorkingDirectory
+        {
+            get { return tempPath; }
+        }
     }
 }

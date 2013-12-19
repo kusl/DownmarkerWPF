@@ -9,7 +9,7 @@ namespace MarkPad.Tests.Document
 
         public AutoContinueListsTests()
         {
-             behaviour = new AutoContinueLists();
+            behaviour = new AutoContinueLists();
         }
 
         [Fact]

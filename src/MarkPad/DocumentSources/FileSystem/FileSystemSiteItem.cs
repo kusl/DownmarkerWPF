@@ -9,12 +9,13 @@ using MarkPad.Plugins;
 
 namespace MarkPad.DocumentSources.FileSystem
 {
-    public class FileSystemSiteItem : SiteItemBase, IHandle<FileRenamedEvent>, IHandle<FileCreatedEvent>, IHandle<FileDeletedEvent>
+    public class FileSystemSiteItem : SiteItemBase, IHandle<FileRenamedEvent>, IHandle<FileCreatedEvent>,
+        IHandle<FileDeletedEvent>
     {
         readonly IFileSystem fileSystem;
         string originalFileName;
 
-        public FileSystemSiteItem(IEventAggregator eventAggregator, IFileSystem fileSystem, string filePath) : 
+        public FileSystemSiteItem(IEventAggregator eventAggregator, IFileSystem fileSystem, string filePath) :
             base(eventAggregator)
         {
             this.fileSystem = fileSystem;
@@ -29,15 +30,15 @@ namespace MarkPad.DocumentSources.FileSystem
                 try
                 {
                     var siteItems = fileSystem.Directory.GetDirectories(filePath)
-                                              .Select(d => new FileSystemSiteItem(eventAggregator, fileSystem, d))
-                                              .OrderBy(i => i.Name)
-                                              .Concat(fileSystem.Directory.GetFiles(filePath)
-                                                          //TODO Restrict to markdown files only?
-                                                                .Select(
-                                                                    d =>
-                                                                    new FileSystemSiteItem(eventAggregator, fileSystem,
-                                                                                           d))
-                                                                .OrderBy(i => i.Name));
+                        .Select(d => new FileSystemSiteItem(eventAggregator, fileSystem, d))
+                        .OrderBy(i => i.Name)
+                        .Concat(fileSystem.Directory.GetFiles(filePath)
+                            //TODO Restrict to markdown files only?
+                            .Select(
+                                d =>
+                                    new FileSystemSiteItem(eventAggregator, fileSystem,
+                                        d))
+                            .OrderBy(i => i.Name));
 
                     Children = new ObservableCollection<ISiteItem>(siteItems);
                 }
@@ -94,8 +95,8 @@ namespace MarkPad.DocumentSources.FileSystem
             //seems to happen if you are running github 4 windows and 
             //looking at a repository while you edit a file from 
             //that repository in markpad
-            if(message.FullPath.Contains(".git\\") ||
-               message.FullPath.Contains(".git/")) 
+            if (message.FullPath.Contains(".git\\") ||
+                message.FullPath.Contains(".git/"))
             {
                 return;
             }

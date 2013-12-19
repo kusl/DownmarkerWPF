@@ -89,8 +89,8 @@ namespace MarkPad.Tests.DocumentSources.FileSystem
             var eventAggregator = Substitute.For<IEventAggregator>();
             const string oldFileName = @"c:\Site\Folder";
             var testItem = new FileSystemSiteItem(eventAggregator, fileSystem, oldFileName);
-            testItem.Children.Add(new TestItem(eventAggregator) { Name = "Alpha.txt" });
-            testItem.Children.Add(new TestItem(eventAggregator) { Name = "Gamma.txt" });
+            testItem.Children.Add(new TestItem(eventAggregator) {Name = "Alpha.txt"});
+            testItem.Children.Add(new TestItem(eventAggregator) {Name = "Gamma.txt"});
 
             // act
             testItem.Handle(new FileCreatedEvent(@"c:\Site\Folder\Beta.txt"));

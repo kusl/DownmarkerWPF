@@ -11,6 +11,8 @@ namespace MarkPad.DocumentSources.GitHub
         Task<BlogInfo[]> FetchBranches(string token, string user, string repositoryName);
         Task<Post[]> FetchFiles(string username, string repository, string branch, string token);
         Task<string> FetchFileContents(string token, string username, string repository, string sha);
-        Task<Tuple<GitTree, GitCommit>> NewTree(string token, string username, string repository, string branch, GitTree tree);
+
+        Task<Tuple<GitTree, GitCommit>> NewTree(string token, string username, string repository, string branch,
+            GitTree tree);
     }
 }

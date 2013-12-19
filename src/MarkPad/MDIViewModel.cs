@@ -16,7 +16,8 @@ namespace MarkPad
             ActivateItem(screen);
         }
 
-        protected override IScreen DetermineNextItemToActivate(System.Collections.Generic.IList<IScreen> list, int lastIndex)
+        protected override IScreen DetermineNextItemToActivate(System.Collections.Generic.IList<IScreen> list,
+            int lastIndex)
         {
             if (list.Count == 0)
                 CurrentDocument = null;
@@ -29,16 +30,18 @@ namespace MarkPad
             CurrentDocument = (DocumentViewModel) newItem;
             if (HtmlPreview == null)
             {
-                var view = (MdiView)GetView();
+                var view = (MdiView) GetView();
                 HtmlPreview = new HtmlPreview
                 {
                     Margin = new Thickness(10, 0, 10, 10),
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                 };
                 HtmlPreview.SetBinding(HtmlPreview.HtmlProperty, new Binding("CurrentDocument.Render"));
-                HtmlPreview.SetBinding(HtmlPreview.FileNameProperty, new Binding("CurrentDocument.MarkpadDocument.Title"));
+                HtmlPreview.SetBinding(HtmlPreview.FileNameProperty,
+                    new Binding("CurrentDocument.MarkpadDocument.Title"));
                 //HtmlPreview.SetBinding(HtmlPreview.BrowserFontSizeProperty, new Binding("CurrentDocument.FontSize"));
-                HtmlPreview.SetBinding(HtmlPreview.ScrollPercentageProperty, new Binding("CurrentDocument.View.ScrollPercentage"));
+                HtmlPreview.SetBinding(HtmlPreview.ScrollPercentageProperty,
+                    new Binding("CurrentDocument.View.ScrollPercentage"));
 
                 view.previewHost.Child = HtmlPreview;
             }

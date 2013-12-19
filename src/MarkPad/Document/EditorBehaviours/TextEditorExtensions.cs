@@ -20,6 +20,5 @@ namespace MarkPad.Document.EditorBehaviours
             var currentLine = editor.GetCurrentLine();
             return editor.Document.GetText(currentLine.Offset, editor.CaretOffset - currentLine.Offset);
         }
-
     }
 }

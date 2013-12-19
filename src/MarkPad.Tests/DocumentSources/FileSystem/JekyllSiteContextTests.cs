@@ -54,11 +54,12 @@ namespace MarkPad.Tests.DocumentSources.FileSystem
             const string newFileName = @"C:\Site\Index2.md";
 
             // act
-            var renamedEventArgs = new RenamedEventArgs(WatcherChangeTypes.Renamed, basePath, "Index2.md", "Index.md");  
+            var renamedEventArgs = new RenamedEventArgs(WatcherChangeTypes.Renamed, basePath, "Index2.md", "Index.md");
             fileSystemWatcher.Renamed += Raise.Event<RenamedEventHandler>(null, renamedEventArgs);
 
             // assert
-            eventAggregator.Received().Publish(Arg.Is<FileRenamedEvent>(f=>f.NewFileName == newFileName && f.OriginalFileName == filename));
+            eventAggregator.Received()
+                .Publish(Arg.Is<FileRenamedEvent>(f => f.NewFileName == newFileName && f.OriginalFileName == filename));
         }
 
         [Fact]
@@ -95,7 +96,7 @@ namespace MarkPad.Tests.DocumentSources.FileSystem
             fileSystemWatcher.Created += Raise.Event<FileSystemEventHandler>(null, createdEvent);
 
             // assert
-            eventAggregator.Received().Publish(Arg.Is<FileCreatedEvent>(c=>c.FullPath == @"C:\Site\NewFolder"));
+            eventAggregator.Received().Publish(Arg.Is<FileCreatedEvent>(c => c.FullPath == @"C:\Site\NewFolder"));
         }
 
         [Fact]

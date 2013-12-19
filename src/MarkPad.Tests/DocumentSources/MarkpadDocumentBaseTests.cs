@@ -19,7 +19,8 @@ namespace MarkPad.Tests.DocumentSources
             siteContext = Substitute.For<ISiteContext>();
             documentFactory = Substitute.For<IDocumentFactory>();
 
-            markpadDocumentBase = new TestMarkpadDocumentBase("Title", "Content", null, new FileReference[0], documentFactory, siteContext, fileSystem);
+            markpadDocumentBase = new TestMarkpadDocumentBase("Title", "Content", null, new FileReference[0],
+                documentFactory, siteContext, fileSystem);
         }
 
         [Fact]

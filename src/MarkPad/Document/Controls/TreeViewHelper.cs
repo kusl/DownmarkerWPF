@@ -28,7 +28,7 @@ namespace MarkPad.Document.Controls
                 }
 
                 // Expand the current container
-                if (container is TreeViewItem && !((TreeViewItem)container).IsExpanded)
+                if (container is TreeViewItem && !((TreeViewItem) container).IsExpanded)
                 {
                     container.SetValue(TreeViewItem.IsExpandedProperty, true);
                 }
@@ -40,7 +40,7 @@ namespace MarkPad.Document.Controls
                 // regenerate the visuals because they may have been virtualized away.
 
                 container.ApplyTemplate();
-                var itemsPresenter = (ItemsPresenter)container.Template.FindName("ItemsHost", container);
+                var itemsPresenter = (ItemsPresenter) container.Template.FindName("ItemsHost", container);
                 if (itemsPresenter != null)
                 {
                     itemsPresenter.ApplyTemplate();
@@ -58,7 +58,7 @@ namespace MarkPad.Document.Controls
                     }
                 }
 
-                var itemsHostPanel = (Panel)VisualTreeHelper.GetChild(itemsPresenter, 0);
+                var itemsHostPanel = (Panel) VisualTreeHelper.GetChild(itemsPresenter, 0);
 
                 // Ensure that the generator for this panel has been created.
 #pragma warning disable 168
@@ -67,8 +67,8 @@ namespace MarkPad.Document.Controls
 
                 for (int i = 0, count = container.Items.Count; i < count; i++)
                 {
-                    var subContainer = (TreeViewItem)container.ItemContainerGenerator.
-                                                                  ContainerFromIndex(i);
+                    var subContainer = (TreeViewItem) container.ItemContainerGenerator.
+                        ContainerFromIndex(i);
 
                     // Bring the item into view to maintain the
                     // same behavior as with a virtualizing panel.
@@ -99,7 +99,7 @@ namespace MarkPad.Document.Controls
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(visual); i++)
             {
-                var child = (Visual)VisualTreeHelper.GetChild(visual, i);
+                var child = (Visual) VisualTreeHelper.GetChild(visual, i);
                 if (child != null)
                 {
                     var correctlyTyped = child as T;
@@ -118,6 +118,5 @@ namespace MarkPad.Document.Controls
 
             return null;
         }
-
     }
 }

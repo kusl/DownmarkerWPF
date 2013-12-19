@@ -1,14 +1,15 @@
-$(function () {
+$(function() {
+
     function enablePrettyPrinting() {
         $("pre").each(
-        function () {
-            $(this).attr("class", "prettyprint");
-        });
+            function() {
+                $(this).attr("class", "prettyprint");
+            });
         prettyPrint();
     }
 
     function enablePrettyDates() {
-        $("span.date").each(function () {
+        $("span.date").each(function() {
             var utc = $(this).html();
             var utcDate = new Date(Date.parse(utc));
 
@@ -31,27 +32,28 @@ $(function () {
     }
 
     var changes = 0;
+
     function enableChangeDetection() {
-        $("input[type=text]:not(#q)").click(function () {
+        $("input[type=text]:not(#q)").click(function() {
             changes++;
         });
 
-        $("textarea").click(function () {
+        $("textarea").click(function() {
             changes++;
         });
 
-        $("input[type=submit]").click(function () {
+        $("input[type=submit]").click(function() {
             changes = 0;
         });
 
-        window.onbeforeunload = function () {
+        window.onbeforeunload = function() {
             if (changes > 0) {
                 return "Navigating away will lose the unsaved changes you have made.";
             }
         };
     }
 
-    $.expr[':'].external = function (obj) {
+    $.expr[':'].external = function(obj) {
         return !(obj.href == "")
             && !obj.href.match(/^mailto\:/)
             && !(obj.hostname == location.hostname);
@@ -59,10 +61,10 @@ $(function () {
 
     function enableNewWindowLinks() {
         $(".content a:external")
-        .not(".comment-author a")
-        .addClass("new-window");
+            .not(".comment-author a")
+            .addClass("new-window");
 
-        $('a.new-window').click(function () {
+        $('a.new-window').click(function() {
             window.open(this.href);
             return false;
         });

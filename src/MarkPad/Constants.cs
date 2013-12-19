@@ -7,9 +7,9 @@ namespace MarkPad
 {
     public static class Constants
     {
-        public static readonly string[] DefaultExtensions = new[] { ".md", ".markdown", ".mdown", ".mkd" };
+        public static readonly string[] DefaultExtensions = new[] {".md", ".markdown", ".mdown", ".mkd"};
 
-        public static readonly string[] Icons = new[] { "markpaddoc.ico" };
+        public static readonly string[] Icons = new[] {"markpaddoc.ico"};
 
         public static string ExtensionFilter
         {
@@ -27,7 +27,8 @@ namespace MarkPad
             {
                 var assemblyName = Assembly.GetEntryAssembly().GetName();
 
-                return Path.Combine(Path.GetTempPath(), String.Format("{0}.{1}", assemblyName.Name, assemblyName.Version));
+                return Path.Combine(Path.GetTempPath(),
+                    String.Format("{0}.{1}", assemblyName.Name, assemblyName.Version));
             }
         }
 

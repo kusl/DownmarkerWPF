@@ -18,7 +18,8 @@ namespace MarkPad.DocumentSources.WebSources
         readonly IWebDocumentService webDocumentService;
         readonly IEventAggregator eventAggregator;
 
-        protected WebSiteContext(BlogSetting blog, IWebDocumentService webDocumentService, IEventAggregator eventAggregator)
+        protected WebSiteContext(BlogSetting blog, IWebDocumentService webDocumentService,
+            IEventAggregator eventAggregator)
         {
             this.blog = blog;
             this.webDocumentService = webDocumentService;
@@ -26,7 +27,10 @@ namespace MarkPad.DocumentSources.WebSources
             workingDirectory = Path.Combine(Path.GetTempPath(), blog.BlogName);
         }
 
-        public string WorkingDirectory { get { return workingDirectory; } }
+        public string WorkingDirectory
+        {
+            get { return workingDirectory; }
+        }
 
         public ObservableCollection<ISiteItem> Items
         {
@@ -46,7 +50,8 @@ namespace MarkPad.DocumentSources.WebSources
                             foreach (var otherPosts in t.Result)
                             {
                                 var postid = otherPosts.postid.ToString();
-                                var webDocumentItem = new WebDocumentItem(webDocumentService, eventAggregator, postid, otherPosts.title, Blog);
+                                var webDocumentItem = new WebDocumentItem(webDocumentService, eventAggregator, postid,
+                                    otherPosts.title, Blog);
                                 Items.Add(webDocumentItem);
                             }
                             IsLoading = false;

@@ -11,7 +11,8 @@ namespace MarkPad.DocumentSources
         readonly Func<OpenFromWebViewModel> openFromWebViewModelFactory;
         readonly IWindowManager windowManager;
 
-        public OpenDocumentFromWeb(IBlogService blogService, Func<OpenFromWebViewModel> openFromWebViewModelFactory, IWindowManager windowManager)
+        public OpenDocumentFromWeb(IBlogService blogService, Func<OpenFromWebViewModel> openFromWebViewModelFactory,
+            IWindowManager windowManager)
         {
             this.blogService = blogService;
             this.openFromWebViewModelFactory = openFromWebViewModelFactory;
@@ -24,10 +25,10 @@ namespace MarkPad.DocumentSources
             if (blogs == null || blogs.Count == 0)
             {
                 if (!blogService.ConfigureNewBlog("Open from web"))
-                    return TaskEx.FromResult(new OpenDocumentFromWebResult(){Success =  false});
+                    return TaskEx.FromResult(new OpenDocumentFromWebResult() {Success = false});
                 blogs = blogService.GetBlogs();
                 if (blogs == null || blogs.Count == 0)
-                    return TaskEx.FromResult(new OpenDocumentFromWebResult() { Success = false });
+                    return TaskEx.FromResult(new OpenDocumentFromWebResult() {Success = false});
             }
 
             var openFromWeb = openFromWebViewModelFactory();
@@ -36,11 +37,11 @@ namespace MarkPad.DocumentSources
             var result = windowManager.ShowDialog(openFromWeb);
 
             var openDocumentFromWebResult = new OpenDocumentFromWebResult
-                                            {
-                                                Success = result,
-                                                SelectedPost = openFromWeb.SelectedPost,
-                                                SelectedBlog = openFromWeb.SelectedBlog
-                                            };
+            {
+                Success = result,
+                SelectedPost = openFromWeb.SelectedPost,
+                SelectedBlog = openFromWeb.SelectedBlog
+            };
             return TaskEx.FromResult(openDocumentFromWebResult);
         }
     }

@@ -9,8 +9,14 @@ namespace MarkPad.Document.SpellCheck
 {
     public class SpellCheckProvider : ISpellCheckProvider
     {
-        readonly Regex wordSeparatorRegex = new Regex("-[^\\w]+|^'[^\\w]+|[^\\w]+'[^\\w]+|[^\\w]+-[^\\w]+|[^\\w]+'$|[^\\w]+-$|^-$|^'$|[^\\w'-]", RegexOptions.Compiled);
-        readonly Regex uriFinderRegex = new Regex("(http|ftp|https|mailto):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?", RegexOptions.Compiled);
+        readonly Regex wordSeparatorRegex =
+            new Regex("-[^\\w]+|^'[^\\w]+|[^\\w]+'[^\\w]+|[^\\w]+-[^\\w]+|[^\\w]+'$|[^\\w]+-$|^-$|^'$|[^\\w'-]",
+                RegexOptions.Compiled);
+
+        readonly Regex uriFinderRegex =
+            new Regex(
+                "(http|ftp|https|mailto):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?",
+                RegexOptions.Compiled);
 
         readonly ISpellingService spellingService;
         readonly SpellCheckBackgroundRenderer spellCheckRenderer;
@@ -43,7 +49,7 @@ namespace MarkPad.Document.SpellCheck
             DoSpellCheck();
         }
 
-        private void DoSpellCheck()
+        void DoSpellCheck()
         {
             if (view == null) return;
             if (!view.TextView.VisualLinesValid) return;
@@ -56,7 +62,8 @@ namespace MarkPad.Document.SpellCheck
             {
                 int startIndex = 0;
 
-                string originalText = view.Document.GetText(currentLine.FirstDocumentLine.Offset, currentLine.LastDocumentLine.EndOffset - currentLine.FirstDocumentLine.Offset);
+                string originalText = view.Document.GetText(currentLine.FirstDocumentLine.Offset,
+                    currentLine.LastDocumentLine.EndOffset - currentLine.FirstDocumentLine.Offset);
                 originalText = Regex.Replace(originalText, "[\\u2018\\u2019\\u201A\\u201B\\u2032\\u2035]", "'");
 
                 var textWithoutUrls = uriFinderRegex.Replace(originalText, "");
@@ -68,7 +75,8 @@ namespace MarkPad.Document.SpellCheck
                 {
                     string trimmedWord = word.Trim('\'', '_', '-');
 
-                    int num = currentLine.FirstDocumentLine.Offset + originalText.IndexOf(trimmedWord, startIndex, StringComparison.InvariantCultureIgnoreCase);
+                    int num = currentLine.FirstDocumentLine.Offset +
+                              originalText.IndexOf(trimmedWord, startIndex, StringComparison.InvariantCultureIgnoreCase);
 
                     if (!spellingService.Spell(trimmedWord))
                     {
@@ -80,12 +88,13 @@ namespace MarkPad.Document.SpellCheck
                         spellCheckRenderer.ErrorSegments.Add(textSegment);
                     }
 
-                    startIndex = originalText.IndexOf(word, startIndex, StringComparison.InvariantCultureIgnoreCase) + word.Length;
+                    startIndex = originalText.IndexOf(word, startIndex, StringComparison.InvariantCultureIgnoreCase) +
+                                 word.Length;
                 }
             }
         }
 
-        private void ClearSpellCheckErrors()
+        void ClearSpellCheckErrors()
         {
             if (spellCheckRenderer == null) return;
             spellCheckRenderer.ErrorSegments.Clear();
@@ -101,7 +110,6 @@ namespace MarkPad.Document.SpellCheck
         {
             if (spellCheckRenderer == null) return Enumerable.Empty<string>();
             return spellingService.Suggestions(word);
-        } 
+        }
     }
-
 }
