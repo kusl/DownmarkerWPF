@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using MarkPad.Plugins;
 using MarkPad.Settings.Models;
@@ -119,18 +120,9 @@ body {{ font-family: Segoe UI, sans-serif; font-size:0.8em; }}
             string themeName;
             if (!TryGetHeaderValue(header, "theme", out themeName)) return "";
 
-            var resources = "";
             var path = Path.Combine(HtmlPreview.BaseDirectory, themeName);
 
-            foreach (var resource in Directory.GetFiles(path, filter))
-            {
-                resources += String.Format(
-                    resourceTemplate,
-                    themeName,
-                    Path.GetFileName(resource));
-            }
-
-            return resources;
+            return Directory.GetFiles(path, filter).Aggregate("", (current, resource) => current + String.Format(resourceTemplate, themeName, Path.GetFileName(resource)));
         }
 
         static bool TryGetHeaderValue(string header, string key, out string value)
